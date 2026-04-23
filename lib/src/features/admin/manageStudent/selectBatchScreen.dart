@@ -6,7 +6,8 @@ import '../../../services/mock_data_service.dart';
 
 class Selectbatchscreen extends ConsumerStatefulWidget {
   final String batchId;
-  const Selectbatchscreen({super.key, required this.batchId});
+  final String course;
+  const Selectbatchscreen({super.key, required this.batchId, required this.course});
 
   @override
   ConsumerState<Selectbatchscreen> createState() => _SelectbatchscreenState();
@@ -20,10 +21,10 @@ class _SelectbatchscreenState extends ConsumerState<Selectbatchscreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select Course'),
+        title: Text('${widget.course}'),
       ),
       body: batches.isEmpty
-          ? const Center(child: Text('No course found.'))
+          ? const Center(child: Text('No Batch found.'))
           : ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: batches.length,
@@ -39,17 +40,10 @@ class _SelectbatchscreenState extends ConsumerState<Selectbatchscreen> {
                   child: Icon(Icons.person, color: Colors.white),
                 ),
                 title: Text(batch.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.grey),
-                  onPressed: () {
-                    // Edit generic action
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Edit feature coming soon!')));
-                  },
-                ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ManageStudentsScreen(StudentId: batch.id ,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ManageStudentsScreen(batchId: batch.id ,batch: batch.name,course: widget.course,)));
 
             },
           );

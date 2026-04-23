@@ -4,6 +4,7 @@ import 'package:esoft_student_app/src/features/admin/manageBatch/manageBatch.dar
 import 'package:esoft_student_app/src/features/admin/manageCourse/manageCourseScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageLecturer/manageLecturerScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/selectCourseScreen.dart';
+import 'package:esoft_student_app/src/features/auth/splashScreen.dart';
 import 'package:esoft_student_app/src/features/lecturer/myCoursesScreen.dart';
 import 'package:esoft_student_app/src/features/lecturer/myStudentsScreen.dart';
 import 'package:esoft_student_app/src/features/student/myAssignmentsScreen.dart';
@@ -50,7 +51,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(
         path: '/login',
-        builder: (context, state) => const Landingscreen(),
+        builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
         path: '/admin',

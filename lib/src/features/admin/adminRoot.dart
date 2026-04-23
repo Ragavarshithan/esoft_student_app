@@ -14,7 +14,7 @@ class _AdminRoot extends State<AdminRoot> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
     AdminDashboard(),
-    // Adminprofilescreen()
+    AdminProfileScreen()
   ];
 
   void _onItemTapped(int index){

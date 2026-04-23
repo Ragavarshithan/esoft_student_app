@@ -33,7 +33,7 @@ class Customnavbar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(Icons.home_outlined, Icons.home, 0),
-              // _buildNavItem(Icons.person_outline, Icons.person, 1)
+              _buildNavItem(Icons.person_outline, Icons.person, 1)
             ],
           ),
         ),

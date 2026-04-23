@@ -55,7 +55,7 @@ class _MyCourseScreen extends ConsumerState<MyCourseScreen> {
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Selectbatchscreen(batchId: course.id)));
+
             },
           );
         },

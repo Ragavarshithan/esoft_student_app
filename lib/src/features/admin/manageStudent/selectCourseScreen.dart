@@ -40,17 +40,10 @@ class _Selectcoursescreen extends ConsumerState<Selectcoursescreen> {
                   child: Icon(Icons.person, color: Colors.white),
                 ),
                 title: Text(course.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.grey),
-                  onPressed: () {
-                    // Edit generic action
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Edit feature coming soon!')));
-                  },
-                ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Selectbatchscreen(batchId: course.id)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Selectbatchscreen(batchId: course.id,course: course.name,)));
             },
           );
         },
