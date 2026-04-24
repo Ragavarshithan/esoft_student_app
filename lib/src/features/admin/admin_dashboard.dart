@@ -1,11 +1,11 @@
+import 'package:esoft_student_app/src/features/admin/manageAssignment/assignmentManageCourseScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageBatch/manageBatch.dart';
 import 'package:esoft_student_app/src/features/admin/manageLecturer/manageLecturerScreen.dart';
+import 'package:esoft_student_app/src/features/admin/manageModule/moduleManageCourseScreen.dart';
 import 'package:esoft_student_app/src/features/auth/landingScreen.dart';
 import 'package:esoft_student_app/src/features/chat/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import '../../services/mock_data_service.dart';
 import 'manageAssignment/manageAssignmentScreen.dart';
 import 'manageCourse/manageCourseScreen.dart';
 import 'manageStudent/selectCourseScreen.dart';
@@ -39,7 +39,9 @@ class AdminDashboard extends ConsumerWidget {
           _DashboardCard(title: 'Lecturers', icon: Icons.person_outline, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ManageLecturerScreen()))),
           _DashboardCard(title: 'Batches', icon: Icons.group_work, onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) =>  ManagebatchScreen()))),
           _DashboardCard(title: 'Courses', icon: Icons.book, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ManageCourseScreen()))),
-          _DashboardCard(title: 'Assignments', icon: Icons.assignment, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ManageAssignmentScreen()))),
+          _DashboardCard(title: 'Modules', icon: Icons.newspaper, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ModuleManageCourseScreen()))),
+          _DashboardCard(title: 'Assignments', icon: Icons.assignment, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  AssignmentManageCourseScreen()))),
+          _DashboardCard(title: 'Attendance', icon: Icons.check_box_outlined, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ChatScreen()))),
           _DashboardCard(title: 'Messages', icon: Icons.message, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ChatScreen())))
         ],
       ),

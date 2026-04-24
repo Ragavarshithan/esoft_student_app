@@ -23,7 +23,7 @@ class MyMarksScreen extends ConsumerWidget {
               itemCount: myMarks.length,
               itemBuilder: (context, index) {
                 final mark = myMarks[index];
-                final course = mockService.courses.firstWhere((c) => c.id == mark.courseId);
+                final course = mockService.courses.firstWhere((c) => c.id == mark.moduleId);
                 
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),

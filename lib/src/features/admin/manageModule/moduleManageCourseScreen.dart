@@ -1,3 +1,4 @@
+import 'package:esoft_student_app/src/features/admin/manageModule/manageModuleScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/selectBatchScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
 import 'package:flutter/material.dart';
@@ -6,14 +7,14 @@ import 'package:go_router/go_router.dart';
 import '../../../services/mock_data_service.dart';
 import '../../../models/user.dart';
 
-class ManageCourseScreen extends ConsumerStatefulWidget {
-  const ManageCourseScreen({super.key});
+class ModuleManageCourseScreen extends ConsumerStatefulWidget {
+  const ModuleManageCourseScreen({super.key});
 
   @override
-  ConsumerState<ManageCourseScreen> createState() => _ManageCourseScreen();
+  ConsumerState<ModuleManageCourseScreen> createState() => _ModuleManageCourseScreen();
 }
 
-class _ManageCourseScreen extends ConsumerState<ManageCourseScreen> {
+class _ModuleManageCourseScreen extends ConsumerState<ModuleManageCourseScreen> {
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
@@ -40,27 +41,12 @@ class _ManageCourseScreen extends ConsumerState<ManageCourseScreen> {
                   child: Icon(Icons.book, color: Colors.white),
                 ),
                 title: Text(course.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.grey),
-                  onPressed: () {
-                    // Edit generic action
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Edit feature coming soon!')));
-                  },
-                ),
               ),
             ),
             onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>  ManageModuleScreen(courseId: course.id,courseName: course.name,)));
             },
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF1E3A8A),
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          // Add action hook
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create student to be integrated with backend!')));
         },
       ),
     );

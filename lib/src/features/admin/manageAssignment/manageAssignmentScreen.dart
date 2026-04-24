@@ -1,10 +1,14 @@
+import 'package:esoft_student_app/src/features/admin/manageAssignment/newAssignmentScreen.dart';
+import 'package:esoft_student_app/src/features/admin/manageAssignment/viewEditAssignmentScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../services/mock_data_service.dart';
 
 class ManageAssignmentScreen extends ConsumerStatefulWidget {
-  const ManageAssignmentScreen({super.key});
+  final String moduleId;
+  final String moduleName;
+  const ManageAssignmentScreen({super.key, required this.moduleId, required this.moduleName});
 
   @override
   ConsumerState<ManageAssignmentScreen> createState() => _ManageAssignmentScreen();
@@ -14,11 +18,12 @@ class _ManageAssignmentScreen extends ConsumerState<ManageAssignmentScreen> {
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
-    final assignments = mockService.assignments.whereType<Assignment>().toList();
+    final assignments = mockService.assignments.where((a) => a.moduleId == widget.moduleId).toList();
+
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Assignments'),
+        title:  Text('${widget.moduleName}'),
       ),
       body: assignments.isEmpty
           ? const Center(child: Text('No assignments found.'))
@@ -34,7 +39,7 @@ class _ManageAssignmentScreen extends ConsumerState<ManageAssignmentScreen> {
               child: ListTile(
                 leading: const CircleAvatar(
                   backgroundColor: Color(0xFF1E3A8A),
-                  child: Icon(Icons.person, color: Colors.white),
+                  child: Icon(Icons.assignment, color: Colors.white),
                 ),
                 title: Text(assignment.title, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: IconButton(
@@ -47,6 +52,7 @@ class _ManageAssignmentScreen extends ConsumerState<ManageAssignmentScreen> {
               ),
             ),
             onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>  ViewEditAssignmentScreen(course: widget.moduleName, module: widget.moduleName, assignmentTitle: assignment.title, dueDate: assignment.dueDate, description: assignment.description)));
 
             },
           );
@@ -58,7 +64,7 @@ class _ManageAssignmentScreen extends ConsumerState<ManageAssignmentScreen> {
         child: const Icon(Icons.add),
         onPressed: () {
           // Add action hook
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create student to be integrated with backend!')));
+         Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreateAssignmentScreen(course: widget.moduleName, module: widget.moduleName)));
         },
       ),
     );

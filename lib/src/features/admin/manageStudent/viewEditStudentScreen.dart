@@ -124,7 +124,7 @@ class _ViewEditStudentScreenState extends State<ViewEditStudentScreen>
                     const SizedBox(height: 30),
 
                     _buildPrimaryButton(
-                      label: 'CREATE STUDENT',
+                      label: 'UPDATE STUDENT',
                       onTap: () {},
                     ),
                     const SizedBox(height: 20),

@@ -197,28 +197,6 @@ class _AddStudentScreenState extends State<AddStudentScreen>
     );
   }
 
-  Widget _buildPasswordField() {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFE8E8EF),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: TextField(
-        controller: _batchController,
-        style: const TextStyle(fontSize: 14, color: Color(0xFF1A1A2E)),
-        decoration: InputDecoration(
-          hintText: 'Min. 8 characters',
-          hintStyle:
-          const TextStyle(fontSize: 14, color: Color(0xFFAAAAAB)),
-          prefixIcon: const Icon(Icons.lock_outline,
-              size: 18, color: Color(0xFFAAAAAB)),
-          border: InputBorder.none,
-          contentPadding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        ),
-      ),
-    );
-  }
 
 
 

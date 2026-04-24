@@ -23,7 +23,7 @@ class MyAttendanceScreen extends ConsumerWidget {
         itemCount: myAttendances.length,
         itemBuilder: (context, index) {
           final myAttendance = myAttendances[index];
-          final course = mockService.courses.firstWhere((u) => u.id == myAttendance.courseId);
+          final course = mockService.courses.firstWhere((u) => u.id == myAttendance.moduleId);
 
           return Card(
             margin: const EdgeInsets.only(bottom: 12),

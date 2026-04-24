@@ -75,7 +75,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/admin/assignment',
-        builder: (context, state) => const ManageAssignmentScreen(),
+        builder: (context, state) => const ChatScreen(),
       ),
       GoRoute(
         path: '/student',

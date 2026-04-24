@@ -6,30 +6,33 @@ import 'package:go_router/go_router.dart';
 import '../../../services/mock_data_service.dart';
 import '../../../models/user.dart';
 
-class ManageCourseScreen extends ConsumerStatefulWidget {
-  const ManageCourseScreen({super.key});
+class ManageModuleScreen extends ConsumerStatefulWidget {
+  final String courseId;
+  final String courseName;
+  const ManageModuleScreen({super.key, required this.courseId, required this.courseName});
 
   @override
-  ConsumerState<ManageCourseScreen> createState() => _ManageCourseScreen();
+  ConsumerState<ManageModuleScreen> createState() => _ManageModuleScreen();
 }
 
-class _ManageCourseScreen extends ConsumerState<ManageCourseScreen> {
+class _ManageModuleScreen extends ConsumerState<ManageModuleScreen> {
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
-    final courses = mockService.courses.whereType<Course>().toList();
+    final modules = mockService.modules.where((m) => m.courseId == widget.courseId).toList();
+
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Courses'),
+        title:  Text('${widget.courseName}'),
       ),
-      body: courses.isEmpty
-          ? const Center(child: Text('No course found.'))
+      body: modules.isEmpty
+          ? const Center(child: Text('No Module found.'))
           : ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: courses.length,
+        itemCount: modules.length,
         itemBuilder: (context, index) {
-          final course = courses[index];
+          final module = modules[index];
 
           return InkWell(
             child: Card(
@@ -37,9 +40,9 @@ class _ManageCourseScreen extends ConsumerState<ManageCourseScreen> {
               child: ListTile(
                 leading: const CircleAvatar(
                   backgroundColor: Color(0xFF1E3A8A),
-                  child: Icon(Icons.book, color: Colors.white),
+                  child: Icon(Icons.newspaper, color: Colors.white),
                 ),
-                title: Text(course.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                title: Text(module.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: IconButton(
                   icon: const Icon(Icons.edit, color: Colors.grey),
                   onPressed: () {
