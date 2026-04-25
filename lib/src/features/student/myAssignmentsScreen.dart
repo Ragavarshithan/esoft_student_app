@@ -23,7 +23,7 @@ class MyAssignmentsScreen extends ConsumerWidget {
         itemCount: myAssignments.length,
         itemBuilder: (context, index) {
           final myAssignment = myAssignments[index];
-          final course = mockService.courses.firstWhere((u) => u.id == myAssignment.moduleId);
+          final course = mockService.modules.firstWhere((u) => u.id == myAssignment.moduleId);
 
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
