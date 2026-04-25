@@ -1,3 +1,4 @@
+import 'package:esoft_student_app/src/features/admin/attendance/manageAttendancescreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageModule/newModuleScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageModule/viewEditModuleScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/selectBatchScreen.dart';
@@ -8,16 +9,17 @@ import 'package:go_router/go_router.dart';
 import '../../../services/mock_data_service.dart';
 import '../../../models/user.dart';
 
-class ManageModuleScreen extends ConsumerStatefulWidget {
+class SelectModuleAttendanceScreen extends ConsumerStatefulWidget {
+  final String batchId;
   final String courseId;
   final String courseName;
-  const ManageModuleScreen({super.key, required this.courseId, required this.courseName});
+  const SelectModuleAttendanceScreen({super.key, required this.courseId, required this.courseName, required this.batchId});
 
   @override
-  ConsumerState<ManageModuleScreen> createState() => _ManageModuleScreen();
+  ConsumerState<SelectModuleAttendanceScreen> createState() => _SelectModuleAttendanceScreen();
 }
 
-class _ManageModuleScreen extends ConsumerState<ManageModuleScreen> {
+class _SelectModuleAttendanceScreen extends ConsumerState<SelectModuleAttendanceScreen> {
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
@@ -64,7 +66,7 @@ class _ManageModuleScreen extends ConsumerState<ManageModuleScreen> {
         child: const Icon(Icons.add),
         onPressed: () {
           // Add action hook
-          Navigator.push(context, MaterialPageRoute(builder: (context) => newModuleScreen(courseName: widget.courseName)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAttendanceScreen(batchId: '', batch: '', course: '')));
          },
       ),
     );

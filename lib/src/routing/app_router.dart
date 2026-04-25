@@ -1,5 +1,6 @@
 import 'package:esoft_student_app/src/features/admin/adminRoot.dart';
 import 'package:esoft_student_app/src/features/admin/manageAssignment/manageAssignmentScreen.dart';
+import 'package:esoft_student_app/src/features/admin/manageBatch/batchManageCourseScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageBatch/manageBatch.dart';
 import 'package:esoft_student_app/src/features/admin/manageCourse/manageCourseScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageLecturer/manageLecturerScreen.dart';
@@ -63,7 +64,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/admin/batch',
-        builder: (context, state) => const ManagebatchScreen(),
+        builder: (context, state) => const BatchManageCourseScreen(),
       ),
       GoRoute(
         path: '/admin/lecturer',

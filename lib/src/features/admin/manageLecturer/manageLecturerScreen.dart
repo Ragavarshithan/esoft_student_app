@@ -1,3 +1,5 @@
+import 'package:esoft_student_app/src/features/admin/manageLecturer/addLecturerScreen.dart';
+import 'package:esoft_student_app/src/features/admin/manageLecturer/viewEditLecturerScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/manage_students_screen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
 import 'package:esoft_student_app/src/models/user.dart';
@@ -44,8 +46,8 @@ class _ManageLecturerScreen extends ConsumerState<ManageLecturerScreen> {
                   icon: const Icon(Icons.edit, color: Colors.grey),
                   onPressed: () {
                     // Edit generic action
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Edit feature coming soon!')));
-                  },
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditLecturerScreen(lecturerName: lecturer.name, lecturerEmail: lecturer.email, moduleIds: lecturer.assignedCourseIds )));
+                     },
                 ),
               ),
             ),
@@ -60,9 +62,8 @@ class _ManageLecturerScreen extends ConsumerState<ManageLecturerScreen> {
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
         onPressed: () {
-          // Add action hook
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create student to be integrated with backend!')));
-        },
+        Navigator.push(context, MaterialPageRoute(builder: (context) => AddLecturerScreen()));
+         },
       ),
     );
   }

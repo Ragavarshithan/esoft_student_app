@@ -1,5 +1,4 @@
-import 'package:esoft_student_app/src/features/admin/manageCourse/newCourseScreen.dart';
-import 'package:esoft_student_app/src/features/admin/manageCourse/viewEditCourseScreen.dart';
+import 'package:esoft_student_app/src/features/admin/attendance/selectBatchAttendanceScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/selectBatchScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
 import 'package:flutter/material.dart';
@@ -8,14 +7,14 @@ import 'package:go_router/go_router.dart';
 import '../../../services/mock_data_service.dart';
 import '../../../models/user.dart';
 
-class ManageCourseScreen extends ConsumerStatefulWidget {
-  const ManageCourseScreen({super.key});
+class SelectcourseAttendanceScreen extends ConsumerStatefulWidget {
+  const SelectcourseAttendanceScreen({super.key});
 
   @override
-  ConsumerState<ManageCourseScreen> createState() => _ManageCourseScreen();
+  ConsumerState<SelectcourseAttendanceScreen> createState() => _SelectcourseAttendanceScreen();
 }
 
-class _ManageCourseScreen extends ConsumerState<ManageCourseScreen> {
+class _SelectcourseAttendanceScreen extends ConsumerState<SelectcourseAttendanceScreen> {
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
@@ -23,7 +22,7 @@ class _ManageCourseScreen extends ConsumerState<ManageCourseScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Courses'),
+        title: const Text('Select Course'),
       ),
       body: courses.isEmpty
           ? const Center(child: Text('No course found.'))
@@ -39,18 +38,13 @@ class _ManageCourseScreen extends ConsumerState<ManageCourseScreen> {
               child: ListTile(
                 leading: const CircleAvatar(
                   backgroundColor: Color(0xFF1E3A8A),
-                  child: Icon(Icons.book, color: Colors.white),
+                  child: Icon(Icons.person, color: Colors.white),
                 ),
                 title: Text(course.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.grey),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditCourseScreen(courseData: course)));
-                   },
-                ),
               ),
             ),
             onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectBatchAttendanceScreen(batchId: course.id,course: course.name,)));
             },
           );
         },
@@ -60,8 +54,9 @@ class _ManageCourseScreen extends ConsumerState<ManageCourseScreen> {
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => newCourseScreen()));
-          },
+          // Add action hook
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create student to be integrated with backend!')));
+        },
       ),
     );
   }

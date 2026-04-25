@@ -1,38 +1,37 @@
-import 'package:esoft_student_app/src/features/admin/manageBatch/addBatchScreen.dart';
+import 'package:esoft_student_app/src/features/admin/attendance/manageAttendancescreen.dart';
+import 'package:esoft_student_app/src/features/admin/attendance/selectModuleAttendanceScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/manage_students_screen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import '../../../services/mock_data_service.dart';
 
-class ManagebatchScreen extends ConsumerStatefulWidget {
-  final String courseId;
-  const ManagebatchScreen({super.key, required this.courseId});
+class SelectBatchAttendanceScreen extends ConsumerStatefulWidget {
+  final String batchId;
+  final String course;
+  const SelectBatchAttendanceScreen({super.key, required this.batchId, required this.course});
 
   @override
-  ConsumerState<ManagebatchScreen> createState() => _ManagebatchScreen();
+  ConsumerState<SelectBatchAttendanceScreen> createState() => _SelectBatchAttendanceScreenState();
 }
 
-class _ManagebatchScreen extends ConsumerState<ManagebatchScreen> {
+class _SelectBatchAttendanceScreenState extends ConsumerState<SelectBatchAttendanceScreen> {
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
-    final batchIds = mockService.courses.where((c) => c.id == widget.courseId).expand((b) => b.batchId.toSet());
-    final filteredBatches = mockService.batches.where((b) => batchIds.contains(b.id)).toList();
-    final courseName = mockService.courses.where((c) => c.id == widget.courseId).map((c) => c.name).first;
+    final batches = mockService.batches.whereType<Batch>().toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Batches'),
+        title: Text('${widget.course}'),
       ),
-      body: filteredBatches.isEmpty
-          ? const Center(child: Text('No batches found.'))
+      body: batches.isEmpty
+          ? const Center(child: Text('No Batch found.'))
           : ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: filteredBatches.length,
+        itemCount: batches.length,
         itemBuilder: (context, index) {
-          final batch = filteredBatches[index];
+          final batch = batches[index];
 
           return InkWell(
             child: Card(
@@ -46,6 +45,7 @@ class _ManagebatchScreen extends ConsumerState<ManagebatchScreen> {
               ),
             ),
             onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectModuleAttendanceScreen(courseId: widget.course, courseName: widget.course, batchId: widget.batchId)));
 
             },
           );
@@ -56,7 +56,8 @@ class _ManagebatchScreen extends ConsumerState<ManagebatchScreen> {
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddBatchScreen(courseId: widget.courseId, courseName: courseName,)));
+          // Add action hook
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create student to be integrated with backend!')));
         },
       ),
     );

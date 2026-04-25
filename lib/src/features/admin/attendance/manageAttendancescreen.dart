@@ -1,21 +1,21 @@
+import 'package:esoft_student_app/src/features/admin/attendance/newAttendance.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/viewEditStudentScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../services/mock_data_service.dart';
 import '../../../models/user.dart';
-import 'addStudentScreen.dart';
 
-class ManageStudentsScreen extends ConsumerStatefulWidget {
+class ManageAttendanceScreen extends ConsumerStatefulWidget {
   final String batchId;
   final String course;
   final String batch;
-  const ManageStudentsScreen({super.key, required this.batchId, required this.batch, required this.course});
+  const ManageAttendanceScreen({super.key, required this.batchId, required this.batch, required this.course});
 
   @override
-  ConsumerState<ManageStudentsScreen> createState() => _ManageStudentsScreenState();
+  ConsumerState<ManageAttendanceScreen> createState() => _ManageAttendanceScreenState();
 }
 
-class _ManageStudentsScreenState extends ConsumerState<ManageStudentsScreen> {
+class _ManageAttendanceScreenState extends ConsumerState<ManageAttendanceScreen> {
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
@@ -61,7 +61,7 @@ class _ManageStudentsScreenState extends ConsumerState<ManageStudentsScreen> {
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
         onPressed: () {
-         Navigator.push(context, MaterialPageRoute(builder: (context) => AddStudentScreen(course: widget.course, batch: widget.batch,)));
+         Navigator.push(context, MaterialPageRoute(builder: (context) => NewAttendanceScreen()));
         },
       ),
     );

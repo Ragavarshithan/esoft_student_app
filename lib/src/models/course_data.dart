@@ -15,7 +15,7 @@ class Course {
   final String name;
   final String description;
   final String moduleId;
-  final String batchId;
+  final List<String> batchId;
 
   const Course({
     required this.id,

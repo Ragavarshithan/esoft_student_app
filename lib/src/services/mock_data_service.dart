@@ -54,14 +54,14 @@ class MockDataService {
   ];
 
   final List<Course> courses = [
-    const Course(id: 'c1', name: 'Software Engineering', description: 'Introduction to Software Engineering principles and practices', moduleId: 'm1', batchId: 'b1'),
-    const Course(id: 'c2', name: 'Database Management', description: 'Advanced Database Design and SQL', moduleId: 'l2', batchId: 'b1'),
-    const Course(id: 'c3', name: 'Mobile Development', description: 'Flutter and Cross-platform Mobile App Development', moduleId: 'l3', batchId: 'b2'),
-    const Course(id: 'c4', name: 'Web Development', description: 'Modern Web Technologies: React, Node.js and TypeScript', moduleId: 'l4', batchId: 'b1'),
-    const Course(id: 'c5', name: 'Cloud Computing', description: 'Cloud Architecture and AWS fundamentals', moduleId: 'l5', batchId: 'b2'),
-    const Course(id: 'c6', name: 'Artificial Intelligence', description: 'Machine Learning and AI Fundamentals', moduleId: 'l6', batchId: 'b3'),
-    const Course(id: 'c7', name: 'Cybersecurity', description: 'Network Security and Data Protection', moduleId: 'l7', batchId: 'b1'),
-    const Course(id: 'c8', name: 'DevOps Engineering', description: 'CI/CD Pipelines and Infrastructure as Code', moduleId: 'l8', batchId: 'b2'),
+    const Course(id: 'c1', name: 'Software Engineering', description: 'Introduction to Software Engineering principles and practices', moduleId: 'm1', batchId: ['b1']),
+    const Course(id: 'c2', name: 'Database Management', description: 'Advanced Database Design and SQL', moduleId: 'l2', batchId: ['b1']),
+    const Course(id: 'c3', name: 'Mobile Development', description: 'Flutter and Cross-platform Mobile App Development', moduleId: 'l3', batchId: ['b2']),
+    const Course(id: 'c4', name: 'Web Development', description: 'Modern Web Technologies: React, Node.js and TypeScript', moduleId: 'l4', batchId: ['b1']),
+    const Course(id: 'c5', name: 'Cloud Computing', description: 'Cloud Architecture and AWS fundamentals', moduleId: 'l5', batchId:[ 'b2']),
+    const Course(id: 'c6', name: 'Artificial Intelligence', description: 'Machine Learning and AI Fundamentals', moduleId: 'l6', batchId: ['b3']),
+    const Course(id: 'c7', name: 'Cybersecurity', description: 'Network Security and Data Protection', moduleId: 'l7', batchId: ['b1']),
+    const Course(id: 'c8', name: 'DevOps Engineering', description: 'CI/CD Pipelines and Infrastructure as Code', moduleId: 'l8', batchId: ['b2']),
   ];
 
   final List<Module> modules = [
