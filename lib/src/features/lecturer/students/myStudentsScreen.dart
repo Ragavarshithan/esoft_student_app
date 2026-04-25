@@ -3,7 +3,7 @@ import 'package:esoft_student_app/src/models/course_data.dart';
 import 'package:esoft_student_app/src/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../services/mock_data_service.dart';
+import '../../../services/mock_data_service.dart';
 
 class MyStudentsScreen extends ConsumerStatefulWidget {
   const MyStudentsScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../services/mock_data_service.dart';
+import '../../../services/mock_data_service.dart';
 
 class MyAttendanceScreen extends ConsumerWidget {
   const MyAttendanceScreen({super.key});

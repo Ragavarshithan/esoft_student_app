@@ -4,6 +4,7 @@ import 'package:esoft_student_app/src/features/admin/manageBatch/batchManageCour
 import 'package:esoft_student_app/src/features/admin/manageBatch/manageBatch.dart';
 import 'package:esoft_student_app/src/features/admin/manageLecturer/manageLecturerScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageModule/moduleManageCourseScreen.dart';
+import 'package:esoft_student_app/src/features/admin/marks/selectCourseMarksScreen.dart';
 import 'package:esoft_student_app/src/features/auth/landingScreen.dart';
 import 'package:esoft_student_app/src/features/chat/chat_screen.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,8 @@ class AdminDashboard extends ConsumerWidget {
           _DashboardCard(title: 'Modules', icon: Icons.newspaper, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ModuleManageCourseScreen()))),
           _DashboardCard(title: 'Assignments', icon: Icons.assignment, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  AssignmentManageCourseScreen()))),
           _DashboardCard(title: 'Attendance', icon: Icons.check_box_outlined, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  SelectcourseAttendanceScreen()))),
-          _DashboardCard(title: 'Messages', icon: Icons.message, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ChatScreen())))
+          _DashboardCard(title: 'Marks', icon: Icons.percent, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  SelectcourseMarksScreen()))),
+          // _DashboardCard(title: 'Messages', icon: Icons.message, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ChatScreen())))
         ],
       ),
     );

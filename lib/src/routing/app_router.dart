@@ -6,10 +6,10 @@ import 'package:esoft_student_app/src/features/admin/manageCourse/manageCourseSc
 import 'package:esoft_student_app/src/features/admin/manageLecturer/manageLecturerScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/selectCourseScreen.dart';
 import 'package:esoft_student_app/src/features/auth/splashScreen.dart';
-import 'package:esoft_student_app/src/features/lecturer/myCoursesScreen.dart';
-import 'package:esoft_student_app/src/features/lecturer/myStudentsScreen.dart';
-import 'package:esoft_student_app/src/features/student/myAssignmentsScreen.dart';
-import 'package:esoft_student_app/src/features/student/myAttendanceScreen.dart';
+import 'package:esoft_student_app/src/features/lecturer/modules/myModulesScreen.dart';
+import 'package:esoft_student_app/src/features/lecturer/students/myStudentsScreen.dart';
+import 'package:esoft_student_app/src/features/student/assignment/myAssignmentsScreen.dart';
+import 'package:esoft_student_app/src/features/student/attendance/myAttendanceScreen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,7 +17,7 @@ import '../features/auth/landingScreen.dart';
 import '../features/admin/admin_dashboard.dart';
 import '../features/admin/manageStudent/manage_students_screen.dart';
 import '../features/student/student_dashboard.dart';
-import '../features/student/my_marks_screen.dart';
+import '../features/student/marks/my_marks_screen.dart';
 import '../features/lecturer/lecturer_dashboard.dart';
 import '../features/chat/chat_screen.dart';
 import '../models/user.dart';
@@ -97,10 +97,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/lecturer',
         builder: (context, state) => const LecturerDashboard(),
-      ),
-      GoRoute(
-        path: '/lecturer/courses',
-        builder: (context, state) => const MyCourseScreen(),
       ),
       GoRoute(
         path: '/lecturer/students',

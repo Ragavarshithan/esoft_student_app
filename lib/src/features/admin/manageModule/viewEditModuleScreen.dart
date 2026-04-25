@@ -35,7 +35,7 @@ class _ViewEditModuleScreenState extends State<ViewEditModuleScreen> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: const Text(
-          "New Module",
+          "View/Edit Module",
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -47,8 +47,8 @@ class _ViewEditModuleScreenState extends State<ViewEditModuleScreen> {
           children: [
 
             /// TITLE
-            const Text(
-              "Create New Module",
+             Text(
+              "${widget.moduleData.name}",
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
@@ -66,7 +66,7 @@ class _ViewEditModuleScreenState extends State<ViewEditModuleScreen> {
             const SizedBox(height: 20),
 
             /// Assignment Title
-            _buildLabel("New Module Title"),
+            _buildLabel("Module Title"),
             _buildInput(
               hint: "e.g. solid principles",
               controller: _moduleTitleController

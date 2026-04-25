@@ -21,6 +21,8 @@ class _CreateAssignmentScreenState extends State<CreateAssignmentScreen> {
   @override
   void initState() {
     super.initState();
+    _courseController.text = widget.course;
+    _moduleController.text = widget.module;
 
   }
 
@@ -45,7 +47,7 @@ class _CreateAssignmentScreenState extends State<CreateAssignmentScreen> {
 
             /// TITLE
             const Text(
-              "Create Entry",
+              "Create Assignment",
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,

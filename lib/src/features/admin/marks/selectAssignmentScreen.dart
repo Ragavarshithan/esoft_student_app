@@ -1,20 +1,21 @@
 import 'package:esoft_student_app/src/features/admin/manageAssignment/newAssignmentScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageAssignment/viewEditAssignmentScreen.dart';
+import 'package:esoft_student_app/src/features/admin/marks/manageMarksscreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../services/mock_data_service.dart';
 
-class ManageAssignmentScreen extends ConsumerStatefulWidget {
+class SelectAssignmentScreen extends ConsumerStatefulWidget {
   final String moduleId;
   final String moduleName;
-  const ManageAssignmentScreen({super.key, required this.moduleId, required this.moduleName});
+  const SelectAssignmentScreen({super.key, required this.moduleId, required this.moduleName});
 
   @override
-  ConsumerState<ManageAssignmentScreen> createState() => _ManageAssignmentScreen();
+  ConsumerState<SelectAssignmentScreen> createState() => _SelectAssignmentScreen();
 }
 
-class _ManageAssignmentScreen extends ConsumerState<ManageAssignmentScreen> {
+class _SelectAssignmentScreen extends ConsumerState<SelectAssignmentScreen> {
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
@@ -42,15 +43,10 @@ class _ManageAssignmentScreen extends ConsumerState<ManageAssignmentScreen> {
                   child: Icon(Icons.assignment, color: Colors.white),
                 ),
                 title: Text(assignment.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.grey),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) =>  ViewEditAssignmentScreen(course: widget.moduleName, module: widget.moduleName, assignmentTitle: assignment.title, dueDate: assignment.dueDate, description: assignment.description)));
-                  },
-                ),
               ),
             ),
             onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>  ManageMarksScreen( batchId: '', batch: '', course: '',)));
 
             },
           );

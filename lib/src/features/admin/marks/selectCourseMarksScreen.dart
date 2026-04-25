@@ -1,32 +1,29 @@
+import 'package:esoft_student_app/src/features/admin/attendance/selectBatchAttendanceScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/selectBatchScreen.dart';
+import 'package:esoft_student_app/src/features/admin/marks/selectBatchMarksScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
-import 'package:esoft_student_app/src/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../services/mock_data_service.dart';
+import 'package:go_router/go_router.dart';
+import '../../../services/mock_data_service.dart';
+import '../../../models/user.dart';
 
-class MyCourseScreen extends ConsumerStatefulWidget {
-  const MyCourseScreen({super.key});
+class SelectcourseMarksScreen extends ConsumerStatefulWidget {
+  const SelectcourseMarksScreen({super.key});
 
   @override
-  ConsumerState<MyCourseScreen> createState() => _MyCourseScreen();
+  ConsumerState<SelectcourseMarksScreen> createState() => _SelectcourseMarksScreen();
 }
 
-class _MyCourseScreen extends ConsumerState<MyCourseScreen> {
-
+class _SelectcourseMarksScreen extends ConsumerState<SelectcourseMarksScreen> {
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
-    final lecturer = mockService.users.whereType<Lecturer>().toList();
-    final courses = mockService.courses
-        .where((c) => lecturer
-        .expand((l) => l.assignedCourseIds)
-        .contains(c.id))
-        .toList();
+    final courses = mockService.courses.whereType<Course>().toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Courses'),
+        title: const Text('Select Course'),
       ),
       body: courses.isEmpty
           ? const Center(child: Text('No course found.'))
@@ -45,17 +42,10 @@ class _MyCourseScreen extends ConsumerState<MyCourseScreen> {
                   child: Icon(Icons.person, color: Colors.white),
                 ),
                 title: Text(course.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.grey),
-                  onPressed: () {
-                    // Edit generic action
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Edit feature coming soon!')));
-                  },
-                ),
               ),
             ),
             onTap: () {
-
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectBatchMarksScreen(batchId: course.id,course: course.name,)));
             },
           );
         },

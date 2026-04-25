@@ -1,6 +1,10 @@
-import 'package:esoft_student_app/src/features/admin/manageAssignment/assignmentManageBatch.dart';
-import 'package:esoft_student_app/src/features/admin/manageAssignment/manageAssignmentScreen.dart';
+import 'package:esoft_student_app/src/features/admin/attendance/manageAttendancescreen.dart';
+import 'package:esoft_student_app/src/features/admin/manageModule/newModuleScreen.dart';
+import 'package:esoft_student_app/src/features/admin/manageModule/viewEditModuleScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/selectBatchScreen.dart';
+import 'package:esoft_student_app/src/features/admin/marks/manageMarksscreen.dart';
+import 'package:esoft_student_app/src/features/admin/marks/newMarksScreen.dart';
+import 'package:esoft_student_app/src/features/admin/marks/selectAssignmentScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,16 +12,17 @@ import 'package:go_router/go_router.dart';
 import '../../../services/mock_data_service.dart';
 import '../../../models/user.dart';
 
-class AssignmentManageModuleScreen extends ConsumerStatefulWidget {
+class SelectModuleMarksScreen extends ConsumerStatefulWidget {
+  final String batchId;
   final String courseId;
   final String courseName;
-  const AssignmentManageModuleScreen({super.key, required this.courseId, required this.courseName});
+  const SelectModuleMarksScreen({super.key, required this.courseId, required this.courseName, required this.batchId});
 
   @override
-  ConsumerState<AssignmentManageModuleScreen> createState() => _AssignmentManageModuleScreen();
+  ConsumerState<SelectModuleMarksScreen> createState() => _SelectModuleMarksScreen();
 }
 
-class _AssignmentManageModuleScreen extends ConsumerState<AssignmentManageModuleScreen> {
+class _SelectModuleMarksScreen extends ConsumerState<SelectModuleMarksScreen> {
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
@@ -45,12 +50,27 @@ class _AssignmentManageModuleScreen extends ConsumerState<AssignmentManageModule
                   child: Icon(Icons.newspaper, color: Colors.white),
                 ),
                 title: Text(module.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                trailing: IconButton(
+                  icon: const Icon(Icons.edit, color: Colors.grey),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SelectAssignmentScreen(moduleId: '', moduleName: '')));
+                  },
+                ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) =>  AssignmentManagebatchScreen(courseId: widget.courseId,moduleId: module.id,moduleName: module.name,)));
             },
           );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xFF1E3A8A),
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.add),
+        onPressed: () {
+          // Add action hook
+          Navigator.push(context, MaterialPageRoute(builder: (context) => NewMarksScreen()));
+
         },
       ),
     );
