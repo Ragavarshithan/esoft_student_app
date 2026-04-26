@@ -262,7 +262,7 @@ class _OtpScreenState extends State<OtpScreen>
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Welcome back, ${authService.currentUser!.fullName}!'),
+              content: Text('Welcome back, ${authService.currentUser!.name}!'),
               backgroundColor: Colors.green,
             ),
           );

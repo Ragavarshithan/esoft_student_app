@@ -425,15 +425,15 @@ class _LoginScreenState extends State<LoginScreen>
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Welcome back, ${authService.currentUser!.fullName}!'),
+              content: Text('Welcome back, ${authService.currentUser!.name}!'),
               backgroundColor: Colors.green,
             ),
           );
-          if (widget.userRole == "admin" ){
+          if (authService.currentUser!.role == "ADMIN" ){
             Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminRoot()));
-          } else if (widget.userRole == "student") {
+          } else if (authService.currentUser!.role == "STUDENT") {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentRoot()));
-          }else if (widget.userRole == "lecturer") {
+          }else if (authService.currentUser!.role == "LECTURER") {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const LecturerRoot()));
           }
           // Navigate to home screen or dashboard
