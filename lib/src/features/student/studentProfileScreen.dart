@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../auth/landingScreen.dart';
 
-class AdminProfileScreen extends ConsumerWidget {
-  const AdminProfileScreen({super.key});
+class StudentProfileScreen extends ConsumerWidget {
+  const StudentProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -66,7 +66,7 @@ class AdminProfileScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Admin',
+          'Student',
           style: GoogleFonts.inter(
             color: Colors.blue,
             fontSize: 14,

@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../services/mock_data_service.dart';
 
-class MyStudentsScreen extends ConsumerStatefulWidget {
-  const MyStudentsScreen({super.key});
+class MyStudentsMArksScreen extends ConsumerStatefulWidget {
+  const MyStudentsMArksScreen({super.key});
 
   @override
-  ConsumerState<MyStudentsScreen> createState() => _MyStudentsScreen();
+  ConsumerState<MyStudentsMArksScreen> createState() => _MyStudentsMArksScreen();
 }
 
-class _MyStudentsScreen extends ConsumerState<MyStudentsScreen> {
+class _MyStudentsMArksScreen extends ConsumerState<MyStudentsMArksScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -52,16 +52,13 @@ class _MyStudentsScreen extends ConsumerState<MyStudentsScreen> {
                   child: Icon(Icons.person, color: Colors.white),
                 ),
                 title: Text(myStudent.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                trailing: TextButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMyStudentScreen(course: '', batch: '', studentName: myStudent.name, studentEmail: '',)));
-                   }, child: Text('Click to view Details'),
-                ),
+                trailing: Text('50/100',
+                    style: TextStyle(color: Color(0xFF1E3A8A),
+                      fontSize: 16
+                    ),
+                )
               ),
             ),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMyStudentScreen(course: '', batch: '', studentName: myStudent.name, studentEmail: '',)));
-            },
           );
         },
       ),

@@ -5,6 +5,7 @@ import 'package:esoft_student_app/src/features/admin/manageStudent/selectBatchSc
 import 'package:esoft_student_app/src/features/admin/marks/manageMarksscreen.dart';
 import 'package:esoft_student_app/src/features/admin/marks/newMarksScreen.dart';
 import 'package:esoft_student_app/src/features/admin/marks/selectAssignmentScreen.dart';
+import 'package:esoft_student_app/src/features/lecturer/modules/viewLecturerModuleScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,10 +51,10 @@ class _MyModuleScreen extends ConsumerState<MyModuleScreen> {
                   child: Icon(Icons.newspaper, color: Colors.white),
                 ),
                 title: Text(module.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.grey),
+                trailing: TextButton(
+                  child: const Text('View Details', style: TextStyle(color: Color(0xFF1E3A8A))),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SelectAssignmentScreen(moduleId: '', moduleName: '')));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewLecturerModuleScreen(courseName: '', moduleData: module)));
                   },
                 ),
               ),
@@ -61,16 +62,6 @@ class _MyModuleScreen extends ConsumerState<MyModuleScreen> {
             onTap: () {
             },
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF1E3A8A),
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          // Add action hook
-          Navigator.push(context, MaterialPageRoute(builder: (context) => NewMarksScreen()));
-
         },
       ),
     );

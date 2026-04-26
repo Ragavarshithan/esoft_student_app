@@ -2,7 +2,9 @@ import 'package:esoft_student_app/src/features/auth/landingScreen.dart';
 import 'package:esoft_student_app/src/features/chat/chat_screen.dart';
 import 'package:esoft_student_app/src/features/lecturer/modules/myModulesScreen.dart';
 import 'package:esoft_student_app/src/features/lecturer/modules/selectLecturerCourseScreen.dart';
+import 'package:esoft_student_app/src/features/lecturer/myStudentsMarks/selectLecturerStudentCourseScreen.dart';
 import 'package:esoft_student_app/src/features/lecturer/students/myStudentsScreen.dart';
+import 'package:esoft_student_app/src/features/lecturer/students/selectLecturerStudentCourseScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -34,8 +36,8 @@ class LecturerDashboard extends ConsumerWidget {
         mainAxisSpacing: 16,
         children: [
           _DashboardCard(title: 'My Modules', icon: Icons.class_, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  SelectLecturerCourseScreen()))),
-          _DashboardCard(title: 'My Students', icon: Icons.people, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyStudentsScreen()))),
-          _DashboardCard(title: 'Marks & Grading', icon: Icons.grade, onTap: () {}),
+          _DashboardCard(title: 'My Students', icon: Icons.people, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  SelectLecturerStudentCourseScreen()))),
+          _DashboardCard(title: 'Marks & Grading', icon: Icons.grade, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  SelectLecturerStudentCourseMarksScreen()))),
           _DashboardCard(title: 'Messages', icon: Icons.message, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ChatScreen()))),
         ],
       ),

@@ -39,21 +39,16 @@ class _SelectLecturerCourseScreen extends ConsumerState<SelectLecturerCourseScre
                   child: Icon(Icons.person, color: Colors.white),
                 ),
                 title: Text(course.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                trailing: TextButton(
+                    onPressed: () =>     Navigator.push(context, MaterialPageRoute(builder: (context) => MyModuleScreen(courseId: course.id, courseName: course.name, batchId: '',))),
+                    child: Text('View Modules', style: TextStyle(color: Color(0xFF1E3A8A)))
+                ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MyModuleScreen(courseId: '', courseName: '', batchId: '',)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyModuleScreen(courseId: course.id, courseName: course.name, batchId: '',)));
             },
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF1E3A8A),
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          // Add action hook
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create student to be integrated with backend!')));
         },
       ),
     );

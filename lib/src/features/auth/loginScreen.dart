@@ -1,7 +1,9 @@
 import 'package:esoft_student_app/src/features/admin/adminRoot.dart';
 import 'package:esoft_student_app/src/features/auth/SignUpScreen.dart';
 import 'package:esoft_student_app/src/features/auth/authService.dart';
+import 'package:esoft_student_app/src/features/lecturer/lecturerRoot.dart';
 import 'package:esoft_student_app/src/features/lecturer/lecturer_dashboard.dart';
+import 'package:esoft_student_app/src/features/student/studentRoot.dart';
 import 'package:esoft_student_app/src/features/student/student_dashboard.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -430,9 +432,9 @@ class _LoginScreenState extends State<LoginScreen>
           if (widget.userRole == "admin" ){
             Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminRoot()));
           } else if (widget.userRole == "student") {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentDashboard()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentRoot()));
           }else if (widget.userRole == "lecturer") {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const LecturerDashboard()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const LecturerRoot()));
           }
           // Navigate to home screen or dashboard
           // Navigator.pushReplacementNamed(context, '/home');

@@ -5,6 +5,7 @@ import 'package:esoft_student_app/src/features/admin/manageStudent/selectBatchSc
 import 'package:esoft_student_app/src/features/admin/marks/manageMarksscreen.dart';
 import 'package:esoft_student_app/src/features/admin/marks/newMarksScreen.dart';
 import 'package:esoft_student_app/src/features/admin/marks/selectAssignmentScreen.dart';
+import 'package:esoft_student_app/src/features/lecturer/myStudentsMarks/selectLecturerStudentAssignmentMarksScreen.dart';
 import 'package:esoft_student_app/src/features/lecturer/students/myStudentsScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
 import 'package:flutter/material.dart';
@@ -13,17 +14,18 @@ import 'package:go_router/go_router.dart';
 import '../../../services/mock_data_service.dart';
 import '../../../models/user.dart';
 
-class SelectLecturerStudentModuleScreen extends ConsumerStatefulWidget {
+class SelectLecturerStudentModuleMarksScreen extends ConsumerStatefulWidget {
   final String batchId;
   final String courseId;
   final String courseName;
-  const SelectLecturerStudentModuleScreen({super.key, required this.courseId, required this.courseName, required this.batchId});
+  final String batchName;
+  const SelectLecturerStudentModuleMarksScreen({super.key, required this.courseId, required this.courseName, required this.batchId, required this.batchName});
 
   @override
-  ConsumerState<SelectLecturerStudentModuleScreen> createState() => _SelectLecturerStudentModuleScreen();
+  ConsumerState<SelectLecturerStudentModuleMarksScreen> createState() => _SelectLecturerStudentModuleMarksScreen();
 }
 
-class _SelectLecturerStudentModuleScreen extends ConsumerState<SelectLecturerStudentModuleScreen> {
+class _SelectLecturerStudentModuleMarksScreen extends ConsumerState<SelectLecturerStudentModuleMarksScreen> {
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
@@ -32,7 +34,7 @@ class _SelectLecturerStudentModuleScreen extends ConsumerState<SelectLecturerStu
 
     return Scaffold(
       appBar: AppBar(
-        title:  Text('${widget.batchId}'),
+        title:  Text('${widget.batchName}'),
       ),
       body: modules.isEmpty
           ? const Center(child: Text('No Module found.'))
@@ -52,13 +54,13 @@ class _SelectLecturerStudentModuleScreen extends ConsumerState<SelectLecturerStu
                 ),
                 title: Text(module.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: TextButton(
-                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => MyStudentsScreen())),
-                    child: const Text('View Students', style: TextStyle(color: Color(0xFF1E3A8A))),
+                    onPressed: () =>    Navigator.push(context, MaterialPageRoute(builder: (context) => selectLecturerStudentAssignmentMarksScreen(moduleId: module.id, moduleName: module.name))),
+                    child: const Text('View Assignments', style: TextStyle(color: Color(0xFF1E3A8A))),
                 ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MyStudentsScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => selectLecturerStudentAssignmentMarksScreen(moduleId: module.id, moduleName: module.name)));
 
             },
           );

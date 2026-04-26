@@ -8,6 +8,8 @@ class NewAttendanceScreen extends StatefulWidget {
 }
 
 class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
+  DateTime _selectedDate = DateTime(2026, 04, 26);
+  TimeOfDay _selectedTime = const TimeOfDay(hour: 10, minute: 0);
   List<Map<String, dynamic>> students = [
     {
       "name": "Alexander Vance",
@@ -34,6 +36,67 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
       "present": true
     },
   ];
+
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF1E3A8A),
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      setState(() => _selectedDate = picked);
+    }
+  }
+
+  Future<void> _pickTime() async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF1E3A8A),
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      setState(() => _selectedTime = picked);
+    }
+  }
+
+  String _formatDate(DateTime date) {
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    return "${days[date.weekday - 1]}, ${date.day} ${months[date.month - 1]} ${date.year}";
+  }
+  String _formatTime(TimeOfDay time) {
+    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
+    final minute = time.minute.toString().padLeft(2, '0');
+    final period = time.period == DayPeriod.am ? "AM" : "PM";
+    return "$hour:$minute $period";
+  }
 
   void markAllPresent() {
     setState(() {
@@ -89,9 +152,17 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
             /// Date + Time
             Row(
               children: [
-                _chip(Icons.calendar_today, "Monday, 23 October 2023"),
+                _tappableChip(
+                  icon: Icons.calendar_today,
+                  text: _formatDate(_selectedDate),
+                  onTap: _pickDate,
+                ),
                 const SizedBox(width: 10),
-                _chip(Icons.access_time, "10:00 AM"),
+                _tappableChip(
+                  icon: Icons.access_time,
+                  text: _formatTime(_selectedTime),
+                  onTap: _pickTime,
+                ),
               ],
             ),
 
@@ -207,13 +278,13 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
               height: 55,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0D1B2A),
+                  backgroundColor: const Color(0xFF1E3A8A),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                 ),
                 onPressed: () {},
-                icon: const Icon(Icons.people),
-                label: const Text("SUBMIT ATTENDANCE"),
+                icon: const Icon(Icons.check_box_outlined, color: Colors.white),
+                label: const Text("SUBMIT ATTENDANCE", style: TextStyle(color: Colors.white)),
               ),
             )
           ],
@@ -222,19 +293,32 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
     );
   }
 
-  Widget _chip(IconData icon, String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 14),
-          const SizedBox(width: 6),
-          Text(text, style: const TextStyle(fontSize: 12)),
-        ],
+  Widget _tappableChip({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1E3A8A).withOpacity(0.08),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: const Color(0xFF1E3A8A).withOpacity(0.25)),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 14, color: const Color(0xFF1E3A8A)),
+            const SizedBox(width: 6),
+            Text(
+              text,
+              style: const TextStyle(fontSize: 12, color: Color(0xFF1E3A8A), fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(width: 4),
+            const Icon(Icons.edit, size: 11, color: Color(0xFF1E3A8A)),
+          ],
+        ),
       ),
     );
   }

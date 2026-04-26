@@ -1,4 +1,5 @@
 import 'package:esoft_student_app/src/features/lecturer/modules/myModulesScreen.dart';
+import 'package:esoft_student_app/src/features/lecturer/myStudentsMarks/selectLectureStudentBatchMarksScreen.dart';
 import 'package:esoft_student_app/src/features/lecturer/students/selectLectureStudentBatchScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
 import 'package:flutter/material.dart';
@@ -6,14 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../services/mock_data_service.dart';
 
-class SelectLecturerStudentCourseScreen extends ConsumerStatefulWidget {
-  const SelectLecturerStudentCourseScreen({super.key});
+class SelectLecturerStudentCourseMarksScreen extends ConsumerStatefulWidget {
+  const SelectLecturerStudentCourseMarksScreen({super.key});
 
   @override
-  ConsumerState<SelectLecturerStudentCourseScreen> createState() => _SelectLecturerStudentCourseScreen();
+  ConsumerState<SelectLecturerStudentCourseMarksScreen> createState() => _SelectLecturerStudentCourseMarksScreen();
 }
 
-class _SelectLecturerStudentCourseScreen extends ConsumerState<SelectLecturerStudentCourseScreen> {
+class _SelectLecturerStudentCourseMarksScreen extends ConsumerState<SelectLecturerStudentCourseMarksScreen> {
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
@@ -41,15 +42,13 @@ class _SelectLecturerStudentCourseScreen extends ConsumerState<SelectLecturerStu
                 ),
                 title: Text(course.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: TextButton(
-                    onPressed: ()=>    Navigator.push(context, MaterialPageRoute(builder: (context) => SelectLecturerStudentBatchScreen(courseId: course.id))),
-                    child: Text("View Batches",
-                      style: const TextStyle(color: Color(0xFF1E3A8A)),
-                    )
+                    onPressed: () =>    Navigator.push(context, MaterialPageRoute(builder: (context) => SelectLecturerStudentBatchMarksScreen(courseId: course.id))),
+                    child: const Text('View Batches', style: TextStyle(color: Color(0xFF1E3A8A))),
                 ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectLecturerStudentBatchScreen(courseId: course.id)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectLecturerStudentBatchMarksScreen(courseId: course.id)));
             },
           );
         },
