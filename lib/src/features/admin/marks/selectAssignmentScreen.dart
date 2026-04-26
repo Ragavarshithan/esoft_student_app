@@ -43,6 +43,10 @@ class _SelectAssignmentScreen extends ConsumerState<SelectAssignmentScreen> {
                   child: Icon(Icons.assignment, color: Colors.white),
                 ),
                 title: Text(assignment.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                trailing: TextButton(
+                    onPressed: ()=>   Navigator.push(context, MaterialPageRoute(builder: (context) =>  ManageMarksScreen( batchId: '', batch: '', course: '',))),
+                    child: Text("View Marks", style: TextStyle(color: Color(0xFF1E3A8A)),)
+                ),
               ),
             ),
             onTap: () {
@@ -50,15 +54,6 @@ class _SelectAssignmentScreen extends ConsumerState<SelectAssignmentScreen> {
 
             },
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF1E3A8A),
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          // Add action hook
-         Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreateAssignmentScreen(course: widget.moduleName, module: widget.moduleName)));
         },
       ),
     );

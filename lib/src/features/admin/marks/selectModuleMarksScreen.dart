@@ -31,7 +31,7 @@ class _SelectModuleMarksScreen extends ConsumerState<SelectModuleMarksScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title:  Text('${widget.courseName}'),
+        title:  Text('${widget.batchId}'),
       ),
       body: modules.isEmpty
           ? const Center(child: Text('No Module found.'))
@@ -50,29 +50,20 @@ class _SelectModuleMarksScreen extends ConsumerState<SelectModuleMarksScreen> {
                   child: Icon(Icons.newspaper, color: Colors.white),
                 ),
                 title: Text(module.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.grey),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SelectAssignmentScreen(moduleId: '', moduleName: '')));
-                  },
+                trailing: TextButton(
+                    onPressed: ()=>   Navigator.push(context, MaterialPageRoute(builder: (context) => SelectAssignmentScreen(moduleId: module.id, moduleName: module.name))), 
+                    child: Text("View Assignments", style: TextStyle(color: Color(0xFF1E3A8A)),)
                 ),
               ),
             ),
             onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectAssignmentScreen(moduleId: module.id, moduleName: module.name)));
+
             },
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF1E3A8A),
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          // Add action hook
-          Navigator.push(context, MaterialPageRoute(builder: (context) => NewMarksScreen()));
 
-        },
-      ),
     );
   }
 }

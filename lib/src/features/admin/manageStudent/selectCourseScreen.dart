@@ -40,21 +40,16 @@ class _Selectcoursescreen extends ConsumerState<Selectcoursescreen> {
                   child: Icon(Icons.person, color: Colors.white),
                 ),
                 title: Text(course.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                trailing: TextButton(
+                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => Selectbatchscreen(batchId: course.id,course: course.name,))),
+                    child: const Text('View Batches', style: TextStyle(color: Color(0xFF1E3A8A))),
+                ),
               ),
             ),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => Selectbatchscreen(batchId: course.id,course: course.name,)));
             },
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF1E3A8A),
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          // Add action hook
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create student to be integrated with backend!')));
         },
       ),
     );

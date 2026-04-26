@@ -41,6 +41,10 @@ class _ModuleManageCourseScreen extends ConsumerState<ModuleManageCourseScreen> 
                   child: Icon(Icons.book, color: Colors.white),
                 ),
                 title: Text(course.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                trailing: TextButton(
+                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => ManageModuleScreen(courseId: course.id,courseName: course.name,))),
+                    child: const Text('View Modules', style: TextStyle(color: Color(0xFF1E3A8A))),
+                ),
               ),
             ),
             onTap: () {

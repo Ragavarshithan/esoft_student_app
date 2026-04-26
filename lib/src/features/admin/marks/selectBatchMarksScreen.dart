@@ -10,7 +10,8 @@ import '../../../services/mock_data_service.dart';
 class SelectBatchMarksScreen extends ConsumerStatefulWidget {
   final String batchId;
   final String course;
-  const SelectBatchMarksScreen({super.key, required this.batchId, required this.course});
+  final String courseId;
+  const SelectBatchMarksScreen({super.key, required this.batchId, required this.course, required this.courseId});
 
   @override
   ConsumerState<SelectBatchMarksScreen> createState() => _SelectBatchMarksScreenState();
@@ -43,10 +44,14 @@ class _SelectBatchMarksScreenState extends ConsumerState<SelectBatchMarksScreen>
                   child: Icon(Icons.person, color: Colors.white),
                 ),
                 title: Text(batch.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                trailing: TextButton(
+                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => SelectModuleMarksScreen(courseId: widget.courseId, courseName: widget.course, batchId: widget.batchId))),
+                    child: const Text('View Modules', style: TextStyle(color: Color(0xFF1E3A8A))),
+                ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectModuleMarksScreen(courseId: widget.course, courseName: widget.course, batchId: widget.batchId)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectModuleMarksScreen(courseId: widget.courseId, courseName: widget.course, batchId: widget.batchId)));
 
             },
           );

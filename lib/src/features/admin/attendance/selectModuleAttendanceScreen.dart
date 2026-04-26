@@ -47,27 +47,18 @@ class _SelectModuleAttendanceScreen extends ConsumerState<SelectModuleAttendance
                   child: Icon(Icons.newspaper, color: Colors.white),
                 ),
                 title: Text(module.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.grey),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditModuleScreen(moduleData: module, courseName: widget.courseName)));
-                  },
+                trailing: TextButton(
+                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAttendanceScreen(batchId: '', batch: '', course: ''))),
+                    child: const Text('View Attendance', style: TextStyle(color: Color(0xFF1E3A8A))),
                 ),
               ),
             ),
             onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAttendanceScreen(batchId: '', batch: '', course: '')));
+
             },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF1E3A8A),
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          // Add action hook
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAttendanceScreen(batchId: '', batch: '', course: '')));
-         },
       ),
     );
   }

@@ -44,13 +44,11 @@ class _ManageMarksScreenState extends ConsumerState<ManageMarksScreen> {
                       ),
                       title: Text(student.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Text(student.email),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.edit, color: Colors.grey),
-                        onPressed: () {
-                          // Edit generic action
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditStudentScreen(course: widget.course, batch: widget.batch, studentName: student.name, studentEmail: student.email)));
-                        },
-                      ),
+                      trailing: Text('50/100',
+                        style: TextStyle(color: Color(0xFF1E3A8A),
+                            fontSize: 16
+                        ),
+                      )
                     ),
                   ),
                   onTap: () {},

@@ -8,8 +8,10 @@ import '../../../services/mock_data_service.dart';
 
 class SelectBatchAttendanceScreen extends ConsumerStatefulWidget {
   final String batchId;
+  final String batchName;
+  final String courseId;
   final String course;
-  const SelectBatchAttendanceScreen({super.key, required this.batchId, required this.course});
+  const SelectBatchAttendanceScreen({super.key, required this.batchId, required this.course, required this.courseId, required this.batchName});
 
   @override
   ConsumerState<SelectBatchAttendanceScreen> createState() => _SelectBatchAttendanceScreenState();
@@ -42,22 +44,17 @@ class _SelectBatchAttendanceScreenState extends ConsumerState<SelectBatchAttenda
                   child: Icon(Icons.person, color: Colors.white),
                 ),
                 title: Text(batch.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                trailing: TextButton(
+                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => SelectModuleAttendanceScreen(courseId: widget.courseId, courseName: widget.course, batchId: widget.batchId))),
+                    child: const Text('View Modules', style: TextStyle(color: Color(0xFF1E3A8A))),
+                ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectModuleAttendanceScreen(courseId: widget.course, courseName: widget.course, batchId: widget.batchId)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectModuleAttendanceScreen(courseId: widget.courseId, courseName: widget.course, batchId: widget.batchId)));
 
             },
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF1E3A8A),
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          // Add action hook
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create student to be integrated with backend!')));
         },
       ),
     );
