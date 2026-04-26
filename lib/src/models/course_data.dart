@@ -8,6 +8,17 @@ class Batch {
     required this.name,
     required this.year,
   });
+
+  Map<String,dynamic> toJson() => {
+    'name': name,
+    'year': year,
+  };
+
+  factory Batch.fromJson(Map<String,dynamic> json) => Batch(
+    id: json['id'],
+    name: json['name'],
+    year: json['year'],
+  );
 }
 
 class Course {
