@@ -1,5 +1,5 @@
 import 'package:esoft_student_app/src/models/course_data.dart';
-import 'package:esoft_student_app/src/services/course_service.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
 
@@ -196,7 +196,7 @@ class _newCourseScreenState extends State<newCourseScreen> {
           const SnackBar(content: Text('Creating course...')),
         );
 
-        final success = await CourseService().createCourse(
+        final success = await LMSService().createCourse(
           name: courseName,
           description: description,
         );

@@ -1,7 +1,7 @@
 import 'package:esoft_student_app/src/features/admin/manageBatch/manageBatch.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/selectBatchScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
-import 'package:esoft_student_app/src/services/course_service.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -16,7 +16,7 @@ class BatchManageCourseScreen extends ConsumerStatefulWidget {
 }
 
 class _BatchManageCourseScreen extends ConsumerState<BatchManageCourseScreen> {
-  final CourseService _courseService = CourseService();
+  final LMSService _lmsService = LMSService();
   List<Course> _courses = [];
 
   @override
@@ -26,7 +26,7 @@ class _BatchManageCourseScreen extends ConsumerState<BatchManageCourseScreen> {
   }
 
   Future<void> _loadCourses() async {
-    final courses = await _courseService.getAllCourses();
+    final courses = await _lmsService.getAllCourses();
     setState(() {
       _courses = courses;
     });

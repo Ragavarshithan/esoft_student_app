@@ -1,5 +1,5 @@
 import 'package:esoft_student_app/src/models/course_data.dart';
-import 'package:esoft_student_app/src/services/course_service.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
 class ViewEditCourseScreen extends StatefulWidget {
@@ -12,7 +12,7 @@ class ViewEditCourseScreen extends StatefulWidget {
 
 class _ViewEditCourseScreenState extends State<ViewEditCourseScreen> {
 
-  final CourseService _courseService = CourseService();
+  final LMSService _lmsService = LMSService();
 
   final _courseTitleController = TextEditingController();
   final _moduleController = TextEditingController();
@@ -116,7 +116,7 @@ class _ViewEditCourseScreenState extends State<ViewEditCourseScreen> {
                   const SnackBar(content: Text('Updating course details...')),
                 );
 
-                final success = await _courseService.updateCourse(
+                final success = await _lmsService.updateCourse(
                   id: widget.courseData.id,
                   name: courseName,
                   description: description,

@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../features/auth/authService.dart';
 
-class CourseService {
+class LMSService {
   static const String _baseUrl = 'http://43.205.111.147:8080/api';
 
   // Create a new course
