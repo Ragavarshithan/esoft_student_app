@@ -1,4 +1,5 @@
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/services/course_service.dart';
 import 'package:flutter/material.dart';
 
 class ViewEditCourseScreen extends StatefulWidget {
@@ -10,6 +11,8 @@ class ViewEditCourseScreen extends StatefulWidget {
 }
 
 class _ViewEditCourseScreenState extends State<ViewEditCourseScreen> {
+
+  final CourseService _courseService = CourseService();
 
   final _courseTitleController = TextEditingController();
   final _moduleController = TextEditingController();
@@ -98,7 +101,40 @@ class _ViewEditCourseScreenState extends State<ViewEditCourseScreen> {
 
             _buildPrimaryButton(
               label: 'UPDATE COURSE',
-              onTap: () {},
+              onTap: () async {
+                final courseName = _courseTitleController.text.trim();
+                final description = _descriptionController.text.trim();
+
+                if (courseName.isEmpty || description.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please enter both course title and description'), backgroundColor: Colors.red),
+                  );
+                  return;
+                }
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Updating course details...')),
+                );
+
+                final success = await _courseService.updateCourse(
+                  id: widget.courseData.id,
+                  name: courseName,
+                  description: description,
+                );
+
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+                if (success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Course updated successfully!'), backgroundColor: Colors.green),
+                  );
+                  Navigator.pop(context, true); // Return true to refresh list
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Failed to update course.'), backgroundColor: Colors.red),
+                  );
+                }
+              },
             ),
           ],
         ),
@@ -179,35 +215,7 @@ class _ViewEditCourseScreenState extends State<ViewEditCourseScreen> {
     required VoidCallback onTap,
   }) {
     return GestureDetector(
-      onTap: () async {
-        // final fullName = _nameController.text.trim();
-        // final studentId = _courseController.text.trim();
-        // final email = _emailController.text.trim();
-        // final password = _batchController.text;
-
-        // Basic validation
-        // if (fullName.isEmpty ||
-        //     studentId.isEmpty ||
-        //     email.isEmpty ||
-        //     password.isEmpty) {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     const SnackBar(
-        //       content: Text('Please fill in all fields'),
-        //       backgroundColor: Colors.red,
-        //     ),
-        //   );
-        //   return;
-        // }
-
-        // Show loading
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Creating student profile...')),
-        );
-
-
-
-
-      },
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         height: 52,

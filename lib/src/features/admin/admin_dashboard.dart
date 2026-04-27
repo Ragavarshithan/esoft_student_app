@@ -46,7 +46,7 @@ class AdminDashboard extends ConsumerWidget {
           _DashboardCard(title: 'Assignments', icon: Icons.assignment, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  AssignmentManageCourseScreen()))),
           _DashboardCard(title: 'Attendance', icon: Icons.check_box_outlined, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  SelectcourseAttendanceScreen()))),
           _DashboardCard(title: 'Marks', icon: Icons.percent, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  SelectcourseMarksScreen()))),
-          // _DashboardCard(title: 'Messages', icon: Icons.message, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ChatScreen())))
+          _DashboardCard(title: 'Messages', icon: Icons.message, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const ChatScreen())))
         ],
       ),
     );

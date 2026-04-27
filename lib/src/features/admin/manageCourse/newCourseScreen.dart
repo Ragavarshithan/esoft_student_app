@@ -1,5 +1,7 @@
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/services/course_service.dart';
 import 'package:flutter/material.dart';
+
 
 class newCourseScreen extends StatefulWidget {
   const newCourseScreen({super.key});
@@ -175,33 +177,56 @@ class _newCourseScreenState extends State<newCourseScreen> {
   }) {
     return GestureDetector(
       onTap: () async {
-        // final fullName = _nameController.text.trim();
-        // final studentId = _courseController.text.trim();
-        // final email = _emailController.text.trim();
-        // final password = _batchController.text;
+        final courseName = _courseTitleController.text.trim();
+        final description = _descriptionController.text.trim();
 
         // Basic validation
-        // if (fullName.isEmpty ||
-        //     studentId.isEmpty ||
-        //     email.isEmpty ||
-        //     password.isEmpty) {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     const SnackBar(
-        //       content: Text('Please fill in all fields'),
-        //       backgroundColor: Colors.red,
-        //     ),
-        //   );
-        //   return;
-        // }
+        if (courseName.isEmpty || description.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Please enter both course title and description'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return;
+        }
 
         // Show loading
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Creating student profile...')),
+          const SnackBar(content: Text('Creating course...')),
         );
 
+        final success = await CourseService().createCourse(
+          name: courseName,
+          description: description,
+        );
 
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Course created successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          
+          // Clear inputs
+          _courseTitleController.clear();
+          _descriptionController.clear();
+          _moduleController.clear();
+          _courseDurationController.clear();
+          
+          // Pop screen and return true to indicate success
+          Navigator.pop(context, true);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to create course. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       },
       child: Container(
         width: double.infinity,

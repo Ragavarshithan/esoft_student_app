@@ -1,10 +1,12 @@
 class Batch {
   final String id;
+  final String? courseId;
   final String name; 
   final String year;
 
   const Batch({
     required this.id,
+    this.courseId,
     required this.name,
     required this.year,
   });
@@ -35,6 +37,22 @@ class Course {
     required this.moduleId,
     required this.batchId,
   });
+
+  factory Course.fromJson(Map<String,dynamic> json) => Course(
+    id: json['id'],
+    name: json['name'],
+    description: json['description'],
+    moduleId: json['moduleId'] == null ? '' : json['moduleId'],
+    batchId: json['batchId'] == null ? [] : List<String>.from(json['batchId']),
+  );
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+    };
+  }
 }
 
 class Module {

@@ -5,8 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+// import 'firebase_options.dart'; // Uncomment after running flutterfire configure
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase (Using manual setup)
+  await Firebase.initializeApp();
 
   // Initialize Supabase. Replace with actual URL and Anon Key when ready.
   // Uncomment and populate this when Supabase project is created:

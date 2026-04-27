@@ -64,6 +64,43 @@ class AuthService {
     return false; 
   }
 
+  // Refresh Token
+  Future<String?> refreshToken() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final refreshToken = prefs.getString('refreshToken');
+
+      if (refreshToken == null || refreshToken.isEmpty) return null;
+
+      final response = await http.post(
+        Uri.parse('$_baseUrl/auth/refresh-token'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'refreshToken': refreshToken}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        
+        // Update stored access token
+        final newAccessToken = data['accessToken'] as String;
+        await prefs.setString('accessToken', newAccessToken);
+
+        // If backend issues a new refresh token, save it too
+        if (data['refreshToken'] != null) {
+          await prefs.setString('refreshToken', data['refreshToken']);
+        }
+
+        return newAccessToken;
+      } else {
+        // Refresh token might be expired, log user out
+        await logout();
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
   // Logout
   Future<void> logout() async {
     _currentUser = null;
