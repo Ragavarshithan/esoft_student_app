@@ -22,11 +22,11 @@ class _MyStudentsScreen extends ConsumerState<MyStudentsScreen> {
     final student = mockService.users.whereType<Student>().toList();
 
     final lecturerCourseIds = lecturer
-        .expand((l) => l.assignedCourseIds)
+        .expand((l) => l.assignedCourseIds!)
         .toSet();
 
     final myStudents = student
-        .where((s) => s.enrolledCourseIds
+        .where((s) => s.enrolledCourseIds!
         .any((courseId) => lecturerCourseIds.contains(courseId)))
         .toList();
 

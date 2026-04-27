@@ -14,7 +14,7 @@ class AuthService {
   AuthResponse? get currentUser => _currentUser;
 
   // API base URL
-  static const String _baseUrl = 'http://43.205.111.147:8080/api';
+  static const String _baseUrl = 'http://13.233.87.143:8080/api';
 
   // Login user
   Future<bool> login({
