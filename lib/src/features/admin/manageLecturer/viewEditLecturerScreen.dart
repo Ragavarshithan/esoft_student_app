@@ -51,7 +51,7 @@ class _ViewEditLecturerScreenState extends State<ViewEditLecturerScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('View/Edit Student Profile'),
+        title: Text('View/Edit lecturer Profile'),
       ),
       body: Center(
         child: SingleChildScrollView(

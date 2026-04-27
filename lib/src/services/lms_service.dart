@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../features/auth/authService.dart';
 
 class LMSService {
-  static const String _baseUrl = 'http://43.205.111.147:8080/api';
+  static const String _baseUrl = 'http://13.233.87.143:8080/api';
 
   // Create a new course
   Future<bool> createCourse({

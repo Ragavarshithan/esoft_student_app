@@ -33,7 +33,7 @@ class MyAttendanceScreen extends ConsumerWidget {
                 child: Icon(Icons.grade, color: Colors.white),
               ),
               title: Text('${course.name}', style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text('${myAttendance.isPresent ? "Attended" : "Not attended"}'),
+              subtitle: Text('${myAttendance.status}'),
             ),
           );
         },
