@@ -9,8 +9,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
-  final String userRole;
-  const LoginScreen({Key? key, required this.userRole}) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -493,7 +492,7 @@ class _LoginScreenState extends State<LoginScreen>
           ),
         ),
       ),
-      onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen(userRole: widget.userRole,)))
+      onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen()))
     );
   }
 

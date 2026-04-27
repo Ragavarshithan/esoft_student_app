@@ -1,3 +1,4 @@
+import 'package:esoft_student_app/src/features/auth/SignUpScreen.dart';
 import 'package:esoft_student_app/src/features/auth/loginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,21 +27,15 @@ class Landingscreen extends ConsumerWidget {
               ),
               const SizedBox(height: 48),
               _LoginButton(
-                title: 'Login as Admin',
-                icon: Icons.admin_panel_settings,
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(userRole: "admin",))),
+                title: 'Sign In',
+                icon: Icons.login_rounded,
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen())),
               ),
               const SizedBox(height: 16),
               _LoginButton(
-                title: 'Login as Student',
-                icon: Icons.person,
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(userRole: "student",))),
-              ),
-              const SizedBox(height: 16),
-              _LoginButton(
-                title: 'Login as Lecturer',
-                icon: Icons.school_outlined,
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(userRole: "lecturer",))),
+                title: 'Sign Up',
+                icon: Icons.login,
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupScreen())),
               ),
             ],
           ),

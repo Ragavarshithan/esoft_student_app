@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class Batch {
   final String id;
   final String? courseId;
@@ -53,6 +55,26 @@ class Course {
       'description': description,
     };
   }
+}
+
+class Endrollment {
+  final String id;
+  final String studentId;
+  final String moduleId;
+
+  const Endrollment({
+    required this.id,
+    required this.studentId,
+    required this.moduleId,
+  });
+
+  factory Endrollment.fromJson(Map<String,dynamic> json) => Endrollment(
+    id: json['id'],
+    studentId: json['studentId'],
+    moduleId: json['moduleId'],
+  );
+
+
 }
 
 class Module {

@@ -55,13 +55,31 @@ class AuthService {
 
   // Register new user
   Future<bool> register({
-    required String fullName,
-    required String studentId,
+    required String name,
     required String email,
     required String password,
   }) async {
-    // TODO: implement real signup API later
-    return false; 
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/auth/signup'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'name': name,
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        print('Registration failed: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Exception during registration: $e');
+      return false;
+    }
   }
 
   // Refresh Token

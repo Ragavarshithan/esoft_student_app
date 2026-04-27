@@ -1,6 +1,7 @@
 import 'package:esoft_student_app/src/features/admin/manageBatch/manageBatch.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/selectBatchScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/services/course_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +16,22 @@ class BatchManageCourseScreen extends ConsumerStatefulWidget {
 }
 
 class _BatchManageCourseScreen extends ConsumerState<BatchManageCourseScreen> {
+  final CourseService _courseService = CourseService();
+  List<Course> _courses = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCourses();
+  }
+
+  Future<void> _loadCourses() async {
+    final courses = await _courseService.getAllCourses();
+    setState(() {
+      _courses = courses;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
@@ -24,13 +41,13 @@ class _BatchManageCourseScreen extends ConsumerState<BatchManageCourseScreen> {
       appBar: AppBar(
         title: const Text('Select Courses'),
       ),
-      body: courses.isEmpty
+      body: _courses.isEmpty
           ? const Center(child: Text('No course found.'))
           : ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: courses.length,
+        itemCount: _courses.length,
         itemBuilder: (context, index) {
-          final course = courses[index];
+          final course = _courses[index];
 
           return InkWell(
             child: Card(
@@ -52,15 +69,6 @@ class _BatchManageCourseScreen extends ConsumerState<BatchManageCourseScreen> {
 
             },
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF1E3A8A),
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          // Add action hook
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create student to be integrated with backend!')));
         },
       ),
     );

@@ -1,10 +1,10 @@
 import 'package:esoft_student_app/src/features/auth/authService.dart';
 import 'package:esoft_student_app/src/features/auth/loginScreen.dart';
+import 'package:esoft_student_app/src/features/auth/otpScreen.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {
-  final String userRole;
-  const SignupScreen({super.key, required this.userRole});
+  const SignupScreen({super.key});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -99,18 +99,10 @@ class _SignupScreenState extends State<SignupScreen>
                     ),
                     const SizedBox(height: 20),
 
-                    // Student/Staff ID
-                    _buildLabel('Student/Staff ID'),
-                    const SizedBox(height: 6),
-                    _buildTextField(
-                      controller: _idController,
-                      hint: 'EU-000000',
-                      icon: Icons.badge_outlined,
-                    ),
-                    const SizedBox(height: 20),
+
 
                     // Institutional Email
-                    _buildLabel('Institutional Email'),
+                    _buildLabel('Email'),
                     const SizedBox(height: 6),
                     _buildTextField(
                       controller: _emailController,
@@ -140,7 +132,7 @@ class _SignupScreenState extends State<SignupScreen>
                     // Already a Member
                     Center(
                       child: Text(
-                        'ALREADY A MEMBER?',
+                        'ALREADY A USER?',
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
@@ -357,15 +349,11 @@ class _SignupScreenState extends State<SignupScreen>
     return GestureDetector(
       onTap: () async {
         final fullName = _nameController.text.trim();
-        final studentId = _idController.text.trim();
         final email = _emailController.text.trim();
         final password = _passwordController.text;
 
         // Basic validation
-        if (fullName.isEmpty ||
-            studentId.isEmpty ||
-            email.isEmpty ||
-            password.isEmpty) {
+        if (fullName.isEmpty || email.isEmpty || password.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Please fill in all fields'),
@@ -403,8 +391,7 @@ class _SignupScreenState extends State<SignupScreen>
         // Attempt registration
         final authService = AuthService();
         final success = await authService.register(
-          fullName: fullName,
-          studentId: studentId,
+          name: fullName,
           email: email,
           password: password,
         );
@@ -414,16 +401,16 @@ class _SignupScreenState extends State<SignupScreen>
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Account created successfully! Please sign in.'),
+              content: Text('Account created successfully! Please verify your email.'),
               backgroundColor: Colors.green,
             ),
           );
-          // Navigate back to login screen
-          Navigator.push(context, MaterialPageRoute(builder: (context) =>  LoginScreen(userRole: widget.userRole)));
+          // Navigate to OTP screen
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const OtpScreen()));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Email already registered. Please use a different email.'),
+              content: Text('Registration failed.'),
               backgroundColor: Colors.red,
             ),
           );
