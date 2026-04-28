@@ -1,16 +1,19 @@
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
 class CreateAssignmentScreen extends StatefulWidget {
   final String course;
   final String module;
-  const CreateAssignmentScreen({super.key, required this.course, required this.module});
+  final String moduleId;
+  const CreateAssignmentScreen({super.key, required this.course, required this.module, required this.moduleId});
 
   @override
   State<CreateAssignmentScreen> createState() => _CreateAssignmentScreenState();
 }
 
 class _CreateAssignmentScreenState extends State<CreateAssignmentScreen> {
+  final _lmsService = LMSService();
 
   final _assignmentTitleController = TextEditingController();
   final _courseController = TextEditingController();
@@ -105,8 +108,50 @@ class _CreateAssignmentScreenState extends State<CreateAssignmentScreen> {
             const SizedBox(height: 30),
 
             _buildPrimaryButton(
-              label: 'CREATE STUDENT',
-              onTap: () {},
+              label: 'CREATE Assignment',
+              onTap: () async{
+                final name = _assignmentTitleController.text.trim();
+                final description = _descriptionController.text;
+                final dueDate = _dueDateController.text;
+                final moduleId = widget.moduleId;
+
+
+
+                if (name.isEmpty ||
+                    description.isEmpty ||
+                    moduleId.isEmpty || dueDate.isEmpty ) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please fill in all fields'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+                final success = await _lmsService.createAssignment(
+                  moduleId: moduleId,
+                  title: name,
+                  description: description,
+                  dueDate: _parseDate(dueDate),
+                   );
+
+                if (await success) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Assignment updated successfully!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to update Assignment. Please try again.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
             ),
           ],
         ),
@@ -179,42 +224,27 @@ class _CreateAssignmentScreenState extends State<CreateAssignmentScreen> {
       },
     );
   }
-
+  DateTime _parseDate(String date) {
+    try {
+      // Try standard ISO format first (yyyy-MM-dd)
+      return DateTime.parse(date);
+    } catch (_) {
+      // Handle dd/M/yyyy or dd/MM/yyyy
+      final parts = date.split('/');
+      return DateTime(
+        int.parse(parts[2]), // year
+        int.parse(parts[1]), // month
+        int.parse(parts[0]), // day
+      );
+    }
+  }
 
   Widget _buildPrimaryButton({
     required String label,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
-      onTap: () async {
-        // final fullName = _nameController.text.trim();
-        // final studentId = _courseController.text.trim();
-        // final email = _emailController.text.trim();
-        // final password = _batchController.text;
-
-        // Basic validation
-        // if (fullName.isEmpty ||
-        //     studentId.isEmpty ||
-        //     email.isEmpty ||
-        //     password.isEmpty) {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     const SnackBar(
-        //       content: Text('Please fill in all fields'),
-        //       backgroundColor: Colors.red,
-        //     ),
-        //   );
-        //   return;
-        // }
-
-        // Show loading
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Creating student profile...')),
-        );
-
-
-
-
-      },
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         height: 52,

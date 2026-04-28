@@ -1,9 +1,12 @@
+import 'package:esoft_student_app/src/models/user.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
 class AddStudentScreen extends StatefulWidget {
   final String course;
   final String batch;
-  const AddStudentScreen({super.key,required this.course, required this.batch});
+  final String batchId;
+  const AddStudentScreen({super.key,required this.course, required this.batch, required this.batchId});
 
   @override
   State<AddStudentScreen> createState() => _AddStudentScreenState();
@@ -229,6 +232,33 @@ class _AddStudentScreenState extends State<AddStudentScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Creating student profile...')),
         );
+        final success = await LMSService().createUser(
+          name: fullName,
+          email: email,
+          role: UserRole.student,
+          batchId: widget.batchId
+        );
+
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+        if (success == "user created successfully") {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('student created successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          // Pop screen and return true to indicate success
+          Navigator.pop(context, true);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to create student. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
 
 
 

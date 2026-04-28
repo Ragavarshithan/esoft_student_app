@@ -1,16 +1,17 @@
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
 class ViewEditModuleScreen extends StatefulWidget {
   final Module moduleData;
-  final String courseName ;
-  const ViewEditModuleScreen({super.key,required this.courseName, required this.moduleData});
+  const ViewEditModuleScreen({super.key ,required this.moduleData});
 
   @override
   State<ViewEditModuleScreen> createState() => _ViewEditModuleScreenState();
 }
 
 class _ViewEditModuleScreenState extends State<ViewEditModuleScreen> {
+  final _lmsService = LMSService();
 
   final _moduleTitleController = TextEditingController();
   final _courseNameController = TextEditingController();
@@ -23,7 +24,7 @@ class _ViewEditModuleScreenState extends State<ViewEditModuleScreen> {
     _moduleTitleController.text = widget.moduleData.name;
     _creditsController.text = 2.5.toString();
     _descriptionController.text = widget.moduleData.name;
-    _courseNameController.text = widget.courseName;
+    _courseNameController.text = widget.moduleData.courseName!;
 
   }
 
@@ -90,19 +91,34 @@ class _ViewEditModuleScreenState extends State<ViewEditModuleScreen> {
 
 
 
-
-            _buildLabel("Module Description"),
-            _buildInput(
-              hint: "create course description...",
-              controller: _descriptionController,
-              maxLines: 4,
-            ),
-
             const SizedBox(height: 30),
 
             _buildPrimaryButton(
               label: 'CREATE MODULE',
-              onTap: () {},
+              onTap: () async {
+                final success = _lmsService.updateModule(
+                  moduleId: widget.moduleData.id,
+                  name: _moduleTitleController.text,
+                  courseId: widget.moduleData.courseId,
+                 lecturerId: widget.moduleData.lecturerId
+                );
+                if (await success) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('module updated successfully!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to update module. Please try again.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
             ),
 
             const SizedBox(height: 20),
@@ -110,7 +126,25 @@ class _ViewEditModuleScreenState extends State<ViewEditModuleScreen> {
             _buildPrimaryButton(
               label: 'REMOVE MODULE',
               color: Colors.red,
-              onTap: () {},
+              onTap: () async {
+                final success = _lmsService.deleteModule(widget.moduleData.id);
+                if (await success) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('lecturer deleted successfully!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to delete lecturer. Please try again.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
             ),
           ],
         ),

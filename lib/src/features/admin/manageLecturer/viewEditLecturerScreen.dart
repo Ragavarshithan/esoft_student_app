@@ -1,11 +1,12 @@
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/models/user.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
 class ViewEditLecturerScreen extends StatefulWidget {
-  final String lecturerName;
-  final String lecturerEmail;
-  final List<String> ? moduleIds;
-  const ViewEditLecturerScreen({super.key, required this.lecturerName, required this.lecturerEmail, required this.moduleIds});
+  final String userId;
+  final String lecturerId;
+  const ViewEditLecturerScreen({super.key,required this.lecturerId, required this.userId});
 
   @override
   State<ViewEditLecturerScreen> createState() => _ViewEditLecturerScreenState();
@@ -13,6 +14,8 @@ class ViewEditLecturerScreen extends StatefulWidget {
 
 class _ViewEditLecturerScreenState extends State<ViewEditLecturerScreen>
     with SingleTickerProviderStateMixin {
+  final LMSService _lmsService = LMSService();
+
   final _lecturerNameController = TextEditingController();
   final _lecturerEmailController = TextEditingController();
   final _moduleController = TextEditingController();
@@ -23,9 +26,7 @@ class _ViewEditLecturerScreenState extends State<ViewEditLecturerScreen>
   @override
   void initState() {
     super.initState();
-    _lecturerNameController.text = widget.lecturerName;
-    _lecturerEmailController.text = widget.lecturerEmail;
-    _moduleController.text = widget.moduleIds!.first;
+    _loadLecturerDetails();
     _animController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -36,6 +37,14 @@ class _ViewEditLecturerScreenState extends State<ViewEditLecturerScreen>
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
     _animController.forward();
+  }
+
+  Future<void> _loadLecturerDetails() async {
+    final lecturer = await _lmsService.getLecturerById(widget.userId);
+    setState(() {
+      _lecturerNameController.text = lecturer!.name;
+      _lecturerEmailController.text = lecturer.email;
+    });
   }
 
   @override
@@ -67,7 +76,7 @@ class _ViewEditLecturerScreenState extends State<ViewEditLecturerScreen>
                     // Title
                      Center(
                        child: Text(
-                        '${widget.lecturerName}',
+                        '${_lecturerNameController.text}',
                         style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.w700,
@@ -98,23 +107,23 @@ class _ViewEditLecturerScreenState extends State<ViewEditLecturerScreen>
                     const SizedBox(height: 20),
 
                     _buildLabel('Module'),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.all(8),
-                      itemCount: widget.moduleIds?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        final module = widget.moduleIds![index];
-
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Text(module),
-                          ),
-                        );
-                      },
-                    ),
+                    // ListView.builder(
+                    //   shrinkWrap: true,
+                    //   physics: NeverScrollableScrollPhysics(),
+                    //   padding: const EdgeInsets.all(8),
+                    //   itemCount: widget.moduleIds?.length ?? 0,
+                    //   itemBuilder: (context, index) {
+                    //     final module = widget.moduleIds![index];
+                    //
+                    //     return Card(
+                    //       margin: const EdgeInsets.only(bottom: 12),
+                    //       child: Padding(
+                    //         padding: const EdgeInsets.all(12),
+                    //         child: Text(module),
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
                     // const SizedBox(height: 6),
                     // _buildTextField(
                     //   controller: _moduleController,
@@ -126,12 +135,50 @@ class _ViewEditLecturerScreenState extends State<ViewEditLecturerScreen>
 
                     _buildPrimaryButton(
                       label: 'UPDATE Lecturer',
-                      onTap: () {},
+                      onTap: () async {
+                        final success = _lmsService.updateLecturer(
+                            lecturerId: widget.lecturerId,userId: widget.userId, name: _lecturerNameController.text, email: _lecturerEmailController.text
+                        );
+                        if (await success) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('lecturer updated successfully!'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        } else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Failed to update lecturer. Please try again.'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
                     ),
                     const SizedBox(height: 20),
                     _buildPrimaryButton(
                       label: 'REMOVE Lecturer',
-                      onTap: () {},
+                      onTap: () async {
+                        final success = _lmsService.deleteLecturer(widget.userId);
+                        if (await success) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('lecturer deleted successfully!'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        } else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Failed to delete lecturer. Please try again.'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
                       color: Colors.red.shade500,
                     ),
                   ],
@@ -196,33 +243,7 @@ class _ViewEditLecturerScreenState extends State<ViewEditLecturerScreen>
     Color color =  const Color(0xFF1A1A2E),
   }) {
     return GestureDetector(
-      onTap: () async {
-        final fullName = _lecturerNameController.text.trim();
-        final module = _moduleController.text.trim();
-        final email = _lecturerEmailController.text.trim();
-
-
-        if (fullName.isEmpty ||
-            module.isEmpty ||
-            email.isEmpty ){
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Please fill in all fields'),
-              backgroundColor: Colors.red,
-            ),
-          );
-          return;
-        }
-
-        // Show loading
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Creating Lecturer profile...')),
-        );
-
-
-
-
-      },
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         height: 52,

@@ -1,14 +1,30 @@
+import 'package:esoft_student_app/src/features/auth/authService.dart';
+import 'package:esoft_student_app/src/models/auth_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../auth/landingScreen.dart';
 
-class LecturerProfileScreen extends ConsumerWidget {
+class LecturerProfileScreen extends ConsumerStatefulWidget {
   const LecturerProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LecturerProfileScreen> createState() => _LecturerProfileState();
+}
+class _LecturerProfileState extends ConsumerState<LecturerProfileScreen> {
+  AuthResponse? user;
+
+
+  @override
+  void initState() {
+    super.initState();
+    user = AuthService().currentUser;
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -44,9 +60,7 @@ class LecturerProfileScreen extends ConsumerWidget {
             _buildPersonalInfoCard(),
             const SizedBox(height: 20),
 
-            // Academic Status Card
-            _buildAcademicStatusCard(),
-            const SizedBox(height: 30),
+
 
           ],
         ),
@@ -58,7 +72,7 @@ class LecturerProfileScreen extends ConsumerWidget {
     return Column(
       children: [
         Text(
-          'fullName',
+          '${user?.name}',
           style: GoogleFonts.inter(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -66,7 +80,7 @@ class LecturerProfileScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Lecturer',
+          '${user?.role}',
           style: GoogleFonts.inter(
             color: Colors.blue,
             fontSize: 14,
@@ -115,10 +129,8 @@ class LecturerProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
 
-          _buildInfoRow('Legal Name', 'Julian Academicus'),
-          _buildInfoRow('Institutional Email', 'julian.a@esoft.edu', isEmail: true),
-          _buildInfoRow('Phone Number', '+94 77 123 4567'),
-          _buildInfoRow('Date of Birth', 'May 14, 2002'),
+          _buildInfoRow('Legal Name', '${user?.name}'),
+          _buildInfoRow('Institutional Email', '${user?.email}', isEmail: true),
         ],
       ),
     );

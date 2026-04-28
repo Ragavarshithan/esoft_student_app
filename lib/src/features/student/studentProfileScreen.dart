@@ -1,14 +1,28 @@
+import 'package:esoft_student_app/src/features/auth/authService.dart';
+import 'package:esoft_student_app/src/models/auth_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../auth/landingScreen.dart';
 
-class StudentProfileScreen extends ConsumerWidget {
+class StudentProfileScreen extends ConsumerStatefulWidget {
   const StudentProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<StudentProfileScreen> createState() => StudentProfileScreenState();
+}
+class StudentProfileScreenState extends ConsumerState<StudentProfileScreen> {
+  AuthResponse? user;
+
+
+  @override
+  void initState() {
+    super.initState();
+    user = AuthService().currentUser;
+  }
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -37,16 +51,14 @@ class StudentProfileScreen extends ConsumerWidget {
         child: Column(
           children: [
             // Profile Header
-            _buildProfileHeader(),
+            _buildProfileHeader(user!.name),
             const SizedBox(height: 30),
 
             // Personal Information Card
             _buildPersonalInfoCard(),
             const SizedBox(height: 20),
 
-            // Academic Status Card
-            _buildAcademicStatusCard(),
-            const SizedBox(height: 30),
+
 
           ],
         ),
@@ -54,11 +66,11 @@ class StudentProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildProfileHeader(String text) {
     return Column(
       children: [
         Text(
-          'fullName',
+          text,
           style: GoogleFonts.inter(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -66,7 +78,7 @@ class StudentProfileScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Student',
+          '${user!.role}',
           style: GoogleFonts.inter(
             color: Colors.blue,
             fontSize: 14,
@@ -115,10 +127,8 @@ class StudentProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
 
-          _buildInfoRow('Legal Name', 'Julian Academicus'),
-          _buildInfoRow('Institutional Email', 'julian.a@esoft.edu', isEmail: true),
-          _buildInfoRow('Phone Number', '+94 77 123 4567'),
-          _buildInfoRow('Date of Birth', 'May 14, 2002'),
+          _buildInfoRow('Legal Name', '${user!.name}'),
+          _buildInfoRow('Institutional Email', '${user!.email}', isEmail: true),
         ],
       ),
     );

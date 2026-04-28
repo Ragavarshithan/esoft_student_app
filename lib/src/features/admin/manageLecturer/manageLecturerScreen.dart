@@ -3,6 +3,7 @@ import 'package:esoft_student_app/src/features/admin/manageLecturer/viewEditLect
 import 'package:esoft_student_app/src/features/admin/manageStudent/manage_students_screen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
 import 'package:esoft_student_app/src/models/user.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +17,22 @@ class ManageLecturerScreen extends ConsumerStatefulWidget {
 }
 
 class _ManageLecturerScreen extends ConsumerState<ManageLecturerScreen> {
+  final LMSService _lmsService = LMSService();
+  List<Lecturer> _lecturers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLecturers();
+  }
+
+  Future<void> _loadLecturers() async {
+    final lecturers = await _lmsService.getAllLecturers();
+    setState(() {
+      _lecturers = lecturers;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
@@ -25,13 +42,13 @@ class _ManageLecturerScreen extends ConsumerState<ManageLecturerScreen> {
       appBar: AppBar(
         title: const Text('Lecturers'),
       ),
-      body: lecturers.isEmpty
+      body: _lecturers.isEmpty
           ? const Center(child: Text('No lecturers found.'))
           : ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: lecturers.length,
+        itemCount: _lecturers.length,
         itemBuilder: (context, index) {
-          final lecturer = lecturers[index];
+          final lecturer = _lecturers[index];
 
           return InkWell(
             child: Card(
@@ -46,7 +63,7 @@ class _ManageLecturerScreen extends ConsumerState<ManageLecturerScreen> {
                   icon: const Icon(Icons.edit, color: Colors.grey),
                   onPressed: () {
                     // Edit generic action
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditLecturerScreen(lecturerName: lecturer.name, lecturerEmail: lecturer.email, moduleIds: lecturer.assignedCourseIds )));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditLecturerScreen(lecturerId: lecturer.lecturerId,userId: lecturer.id, )));
                      },
                 ),
               ),

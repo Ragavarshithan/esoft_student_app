@@ -2,6 +2,7 @@ import 'package:esoft_student_app/src/features/admin/manageModule/newModuleScree
 import 'package:esoft_student_app/src/features/admin/manageModule/viewEditModuleScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/selectBatchScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -18,23 +19,39 @@ class ManageModuleScreen extends ConsumerStatefulWidget {
 }
 
 class _ManageModuleScreen extends ConsumerState<ManageModuleScreen> {
+  final _lmsService = LMSService();
+  List<Module> _modules = [];
+
+
+  @override
+  void initState() {
+    super.initState();
+    _loadModules();
+  }
+
+  Future<void> _loadModules() async{
+    final modules = await _lmsService.getModuleBycourseId(courseId: widget.courseId);
+    setState(() {
+      _modules = modules;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
     final modules = mockService.modules.where((m) => m.courseId == widget.courseId).toList();
 
-
     return Scaffold(
       appBar: AppBar(
         title:  Text('${widget.courseName}'),
       ),
-      body: modules.isEmpty
+      body: _modules.isEmpty
           ? const Center(child: Text('No Module found.'))
           : ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: modules.length,
+        itemCount: _modules.length,
         itemBuilder: (context, index) {
-          final module = modules[index];
+          final module = _modules[index];
 
           return InkWell(
             child: Card(
@@ -48,7 +65,7 @@ class _ManageModuleScreen extends ConsumerState<ManageModuleScreen> {
                 trailing: IconButton(
                   icon: const Icon(Icons.edit, color: Colors.grey),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditModuleScreen(moduleData: module, courseName: widget.courseName)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditModuleScreen(moduleData: module)));
                   },
                 ),
               ),
@@ -64,7 +81,7 @@ class _ManageModuleScreen extends ConsumerState<ManageModuleScreen> {
         child: const Icon(Icons.add),
         onPressed: () {
           // Add action hook
-          Navigator.push(context, MaterialPageRoute(builder: (context) => newModuleScreen(courseName: widget.courseName)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => newModuleScreen(courseId: '', courseName: '',)));
          },
       ),
     );

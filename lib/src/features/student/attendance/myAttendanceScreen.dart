@@ -10,7 +10,10 @@ class MyAttendanceScreen extends ConsumerWidget {
     final mockService = ref.watch(mockDataServiceProvider);
     final user = ref.watch(currentUserProvider);
 
-    final myAttendances = mockService.attendanceRecords.where((m) => m.studentId == user?.id).toList();
+    final myAttendances = mockService.attendanceRecords;
+    final modules = mockService.modules;
+    final courses = mockService.courses;
+
 
     return Scaffold(
       appBar: AppBar(
@@ -23,7 +26,6 @@ class MyAttendanceScreen extends ConsumerWidget {
         itemCount: myAttendances.length,
         itemBuilder: (context, index) {
           final myAttendance = myAttendances[index];
-          final course = mockService.courses.firstWhere((u) => u.id == myAttendance.moduleId);
 
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
@@ -32,8 +34,8 @@ class MyAttendanceScreen extends ConsumerWidget {
                 backgroundColor: Color(0xFF1E3A8A),
                 child: Icon(Icons.grade, color: Colors.white),
               ),
-              title: Text('${course.name}', style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text('${myAttendance.status}'),
+              title: Text('${myAttendance.date.year}-${myAttendance.date.month.toString().padLeft(2, '0')}-${myAttendance.date.day.toString().padLeft(2, '0')}', style: const TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text(myAttendance.isPresent! ? 'Present' : 'Absent'),
             ),
           );
         },

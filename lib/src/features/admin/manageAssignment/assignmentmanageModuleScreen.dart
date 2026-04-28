@@ -2,6 +2,7 @@ import 'package:esoft_student_app/src/features/admin/manageAssignment/assignment
 import 'package:esoft_student_app/src/features/admin/manageAssignment/manageAssignmentScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/selectBatchScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +19,22 @@ class AssignmentManageModuleScreen extends ConsumerStatefulWidget {
 }
 
 class _AssignmentManageModuleScreen extends ConsumerState<AssignmentManageModuleScreen> {
+  final _lmsService = LMSService();
+  List<Module> _modules = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadModules();
+  }
+
+  Future<void> _loadModules() async{
+    final modules = await _lmsService.getModuleBycourseId(courseId: widget.courseId);
+    setState(() {
+      _modules = modules;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
@@ -28,13 +45,13 @@ class _AssignmentManageModuleScreen extends ConsumerState<AssignmentManageModule
       appBar: AppBar(
         title:  Text('${widget.courseName}'),
       ),
-      body: modules.isEmpty
+      body: _modules.isEmpty
           ? const Center(child: Text('No Module found.'))
           : ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: modules.length,
+        itemCount: _modules.length,
         itemBuilder: (context, index) {
-          final module = modules[index];
+          final module = _modules[index];
 
           return InkWell(
             child: Card(
@@ -46,13 +63,13 @@ class _AssignmentManageModuleScreen extends ConsumerState<AssignmentManageModule
                 ),
                 title: Text(module.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: TextButton(
-                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => AssignmentManagebatchScreen(courseId: widget.courseId,moduleId: module.id,moduleName: module.name,))),
+                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAssignmentScreen(moduleId: module.id, moduleName: module.name,courseName: module.courseName ?? '',))),
                     child: const Text('View Batches', style: TextStyle(color: Color(0xFF1E3A8A))),
                 ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) =>  AssignmentManagebatchScreen(courseId: widget.courseId,moduleId: module.id,moduleName: module.name,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>  ManageAssignmentScreen(moduleId: module.id, moduleName: module.name,courseName: module.courseName ?? '')));
             },
           );
         },

@@ -59,13 +59,13 @@ class _BatchManageCourseScreen extends ConsumerState<BatchManageCourseScreen> {
                 ),
                 title: Text(course.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: TextButton(
-                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => ManagebatchScreen(courseId: course.id))),
+                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => ManagebatchScreen(courseId: course.id,courseName: course.name,))),
                     child: const Text('View Batches', style: TextStyle(color: Color(0xFF1E3A8A))),
                 ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ManagebatchScreen(courseId: course.id)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ManagebatchScreen(courseId: course.id,courseName: course.name,)));
 
             },
           );

@@ -1,16 +1,18 @@
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
 class newModuleScreen extends StatefulWidget {
-  final String courseName ;
-  const newModuleScreen({super.key,required this.courseName});
+  final String courseId;
+  final String courseName;
+  const newModuleScreen({super.key,required this.courseId, required this.courseName});
 
   @override
   State<newModuleScreen> createState() => _newModuleScreenState();
 }
 
 class _newModuleScreenState extends State<newModuleScreen> {
-
+  final LMSService _lmsService = LMSService();
   final _moduleTitleController = TextEditingController();
   final _courseNameController = TextEditingController();
   final _creditsController = TextEditingController();
@@ -19,7 +21,7 @@ class _newModuleScreenState extends State<newModuleScreen> {
   @override
   void initState() {
     super.initState();
-    _courseNameController.text = widget.courseName;
+    _courseNameController.text = widget.courseName!;
 
   }
 
@@ -87,18 +89,49 @@ class _newModuleScreenState extends State<newModuleScreen> {
 
 
 
-            _buildLabel("Module Description"),
-            _buildInput(
-              hint: "create course description...",
-              controller: _descriptionController,
-              maxLines: 4,
-            ),
+
 
             const SizedBox(height: 30),
 
             _buildPrimaryButton(
               label: 'CREATE MODULE',
-              onTap: () {},
+              onTap: () async{
+                final name = _moduleTitleController.text.trim();
+                final courseId = widget.courseId;
+                final lecturerId = "";
+
+                if (name.isEmpty ||
+                    courseId.isEmpty ||
+                    lecturerId.isEmpty ) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please fill in all fields'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+                final success = await _lmsService.createModule(
+                    name: name, courseId: courseId,
+                    lecturerId: lecturerId);
+
+                if (await success) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('module created successfully!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to create module. Please try again.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
             ),
           ],
         ),
@@ -179,35 +212,7 @@ class _newModuleScreenState extends State<newModuleScreen> {
     required VoidCallback onTap,
   }) {
     return GestureDetector(
-      onTap: () async {
-        // final fullName = _nameController.text.trim();
-        // final studentId = _courseController.text.trim();
-        // final email = _emailController.text.trim();
-        // final password = _batchController.text;
-
-        // Basic validation
-        // if (fullName.isEmpty ||
-        //     studentId.isEmpty ||
-        //     email.isEmpty ||
-        //     password.isEmpty) {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     const SnackBar(
-        //       content: Text('Please fill in all fields'),
-        //       backgroundColor: Colors.red,
-        //     ),
-        //   );
-        //   return;
-        // }
-
-        // Show loading
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Creating student profile...')),
-        );
-
-
-
-
-      },
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         height: 52,

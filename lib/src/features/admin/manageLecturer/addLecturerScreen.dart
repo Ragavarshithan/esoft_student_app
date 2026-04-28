@@ -1,3 +1,5 @@
+import 'package:esoft_student_app/src/models/user.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
 class AddLecturerScreen extends StatefulWidget {
@@ -169,12 +171,37 @@ class _AddLecturerScreenState extends State<AddLecturerScreen>
           return;
         }
 
+
         // Show loading
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Creating lecturer profile...')),
         );
+        final success = await LMSService().createUser(
+          name: fullName,
+          email: email,
+          role: UserRole.lecturer,
+        );
 
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
+        if (success == "user created successfully") {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('lecturer created successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          // Pop screen and return true to indicate success
+          Navigator.pop(context, true);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to create lecturer. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
 
 
       },

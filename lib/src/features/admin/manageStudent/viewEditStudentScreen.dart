@@ -1,11 +1,14 @@
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
 class ViewEditStudentScreen extends StatefulWidget {
+  final String studentId;
   final String studentName;
   final String studentEmail;
   final String course;
   final String batch;
-  const ViewEditStudentScreen({super.key,required this.course, required this.batch, required this.studentName, required this.studentEmail});
+  final String batchId;
+  const ViewEditStudentScreen({super.key,required this.course, required this.batch, required this.studentName, required this.studentEmail, required this.studentId, required this.batchId});
 
   @override
   State<ViewEditStudentScreen> createState() => _ViewEditStudentScreenState();
@@ -13,6 +16,7 @@ class ViewEditStudentScreen extends StatefulWidget {
 
 class _ViewEditStudentScreenState extends State<ViewEditStudentScreen>
     with SingleTickerProviderStateMixin {
+  final LMSService _lmsService = LMSService();
   final _studentNameController = TextEditingController();
   final _studentEmailController = TextEditingController();
   final _courseController = TextEditingController();
@@ -125,12 +129,53 @@ class _ViewEditStudentScreenState extends State<ViewEditStudentScreen>
 
                     _buildPrimaryButton(
                       label: 'UPDATE STUDENT',
-                      onTap: () {},
+                      onTap: () async{
+                        final success = _lmsService.updateStudent(
+                            studentId: widget.studentId,
+                            name: _studentNameController.text,
+                            email: _studentEmailController.text,
+                            batchId: widget.batchId
+                        );
+                        if (await success) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('student updated successfully!'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        } else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Failed to student lecturer. Please try again.'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
                     ),
                     const SizedBox(height: 20),
                     _buildPrimaryButton(
                       label: 'REMOVE STUDENT',
-                      onTap: () {},
+                      onTap: () async {
+                        final success = _lmsService.deleteStudent(widget.studentId);
+                        if (await success) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('student deleted successfully!'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        } else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Failed to delete student. Please try again.'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
                       color: Colors.red.shade500,
                     ),
                   ],

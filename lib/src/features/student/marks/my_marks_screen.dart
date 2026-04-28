@@ -10,7 +10,7 @@ class MyMarksScreen extends ConsumerWidget {
     final mockService = ref.watch(mockDataServiceProvider);
     final user = ref.watch(currentUserProvider);
     
-    final myMarks = mockService.marks.where((m) => m.studentId == user?.id).toList();
+    final myMarks = mockService.marks;
 
     return Scaffold(
       appBar: AppBar(
@@ -23,7 +23,7 @@ class MyMarksScreen extends ConsumerWidget {
               itemCount: myMarks.length,
               itemBuilder: (context, index) {
                 final mark = myMarks[index];
-                final course = mockService.courses.firstWhere((c) => c.id == mark.moduleId);
+                final assignment = mockService.assignments.firstWhere((a) => a.id == mark.assignmentId);
                 
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
@@ -32,7 +32,7 @@ class MyMarksScreen extends ConsumerWidget {
                       backgroundColor: Color(0xFF1E3A8A),
                       child: Icon(Icons.grade, color: Colors.white),
                     ),
-                    title: Text('${course.name} - ${mark.score}%', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    title: Text('${assignment.title} - ${mark.score}%', style: const TextStyle(fontWeight: FontWeight.bold)),
                     subtitle: Text('Feedback: ${mark.feedback}'),
                   ),
                 );

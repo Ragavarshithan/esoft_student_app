@@ -5,7 +5,7 @@ class Batch {
   final String? courseId;
   final String? courseName;
   final String name; 
-  final String year;
+  final int year;
 
   const Batch({
     required this.id,
@@ -22,7 +22,7 @@ class Batch {
   factory Batch.fromJson(Map<String,dynamic> json) => Batch(
     id: json['id'],
     name: json['name'],
-    year: json['year'],
+    year: json['year'] as int,
     courseId: json['courseId'],
     courseName: json['courseName'],
   );
@@ -154,7 +154,7 @@ class Assignment {
     moduleName: json['moduleName'],
     title: json['title'],
     description: json['description'],
-    dueDate: json['dueDate'],
+    dueDate: DateTime.parse(json['dueDate']),
   );
 
   Map<String, dynamic> toJson() {

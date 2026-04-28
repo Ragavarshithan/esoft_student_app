@@ -21,27 +21,22 @@ class _MyStudentsMArksScreen extends ConsumerState<MyStudentsMArksScreen> {
     final lecturer = mockService.users.whereType<Lecturer>().toList();
     final student = mockService.users.whereType<Student>().toList();
 
-    final lecturerCourseIds = lecturer
-        .expand((l) => l.assignedCourseIds!)
-        .toSet();
 
-    final myStudents = student
-        .where((s) => s.enrolledCourseIds!
-        .any((courseId) => lecturerCourseIds.contains(courseId)))
-        .toList();
+
+
 
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Students'),
       ),
-      body: myStudents.isEmpty
+      body: student.isEmpty
           ? const Center(child: Text('No Students found.'))
           : ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: myStudents.length,
+        itemCount: student.length,
         itemBuilder: (context, index) {
-          final myStudent = myStudents[index];
+          final myStudent = student[index];
 
           return InkWell(
             child: Card(

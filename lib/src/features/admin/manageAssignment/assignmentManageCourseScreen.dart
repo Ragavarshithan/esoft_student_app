@@ -2,6 +2,7 @@ import 'package:esoft_student_app/src/features/admin/manageAssignment/assignment
 import 'package:esoft_student_app/src/features/admin/manageModule/manageModuleScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/selectBatchScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +17,22 @@ class AssignmentManageCourseScreen extends ConsumerStatefulWidget {
 }
 
 class _AssignmentManageCourseScreen extends ConsumerState<AssignmentManageCourseScreen> {
+  final LMSService _lmsService = LMSService();
+  List<Course> _courses = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCourses();
+  }
+
+  Future<void> _loadCourses() async {
+    final courses = await _lmsService.getAllCourses();
+    setState(() {
+      _courses = courses;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
@@ -25,13 +42,13 @@ class _AssignmentManageCourseScreen extends ConsumerState<AssignmentManageCourse
       appBar: AppBar(
         title: const Text('Courses'),
       ),
-      body: courses.isEmpty
+      body: _courses.isEmpty
           ? const Center(child: Text('No course found.'))
           : ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: courses.length,
+        itemCount: _courses.length,
         itemBuilder: (context, index) {
-          final course = courses[index];
+          final course = _courses[index];
 
           return InkWell(
             child: Card(

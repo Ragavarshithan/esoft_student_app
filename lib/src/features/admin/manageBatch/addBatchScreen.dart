@@ -1,4 +1,5 @@
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
 class AddBatchScreen extends StatefulWidget {
@@ -14,6 +15,7 @@ class _AddBatchScreenState extends State<AddBatchScreen>
     with SingleTickerProviderStateMixin {
   final _newBatchNameController = TextEditingController();
   final _courseNameController = TextEditingController();
+  final _yearController = TextEditingController();
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
   late Animation<Offset> _slideAnim;
@@ -89,12 +91,71 @@ class _AddBatchScreenState extends State<AddBatchScreen>
                       readOnly: true,
                     ),
 
+                    const SizedBox(height: 20),
+                    _buildLabel('year'),
+                    const SizedBox(height: 6),
+                    _buildTextField(
+                      controller: _yearController,
+                      hint: '',
+                      icon: Icons.book,
+                      keyboardType: TextInputType.number,
+                    ),
+
                     const SizedBox(height: 30),
 
                     _buildPrimaryButton(
                       label: 'CREATE BATCH',
-                      onTap: () {},
-                    ),
+                      onTap: () async {
+                        final batchName = _newBatchNameController.text.trim();
+                        final courseId = widget.courseId;
+                        final year = _yearController.text.trim();
+
+                        if (batchName.isEmpty || year.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  'Please enter both course title and description'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Creating batch...')),
+                        );
+
+                        final success = await LMSService().createBatch(
+                          name: batchName,
+                          year: int.parse(year),
+                          courseId: courseId,
+                        );
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+                        if (success) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Batch created successfully!'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+
+                          // Clear inputs
+                          _newBatchNameController.clear();
+                          _yearController.clear();
+
+                          // Pop screen and return true to indicate success
+                          Navigator.pop(context, true);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  'Failed to create batch. Please try again.'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
+                    )
                   ],
                 ),
               ),
@@ -157,29 +218,7 @@ class _AddBatchScreenState extends State<AddBatchScreen>
     required VoidCallback onTap,
   }) {
     return GestureDetector(
-      onTap: () async {
-        final batch = _newBatchNameController.text.trim();
-
-        // Basic validation
-        if (batch.isEmpty ) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Please fill in all fields'),
-              backgroundColor: Colors.red,
-            ),
-          );
-          return;
-        }
-
-        // Show loading
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Creating batch profile...')),
-        );
-
-
-
-
-      },
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         height: 52,

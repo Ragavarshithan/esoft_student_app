@@ -1,3 +1,4 @@
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
 class ViewEditAssignmentScreen extends StatefulWidget {
@@ -5,14 +6,17 @@ class ViewEditAssignmentScreen extends StatefulWidget {
   final DateTime dueDate;
   final String description;
   final String course;
+  final String moduleId;
   final String module;
-  const ViewEditAssignmentScreen({super.key, required this.course, required this.module, required this.assignmentTitle, required this.dueDate, required this.description});
+  final String assignmentId;
+  const ViewEditAssignmentScreen({super.key, required this.course, required this.module, required this.assignmentTitle, required this.dueDate, required this.description, required this.moduleId, required this.assignmentId});
 
   @override
   State<ViewEditAssignmentScreen> createState() => _ViewEditAssignmentScreenState();
 }
 
 class _ViewEditAssignmentScreenState extends State<ViewEditAssignmentScreen> {
+  final _lmsService = LMSService();
 
   final _assignmentTitleController = TextEditingController();
   final _courseController = TextEditingController();
@@ -98,13 +102,69 @@ class _ViewEditAssignmentScreenState extends State<ViewEditAssignmentScreen> {
 
             _buildPrimaryButton(
               label: 'UPDATE ASSIGNMENT',
-              onTap: () {},
+              onTap: () async{
+                final name = _assignmentTitleController.text.trim();
+                final description = _descriptionController.text;
+                final dueDate = _dueDateController.text;
+                final moduleId = widget.moduleId;
+                final assignmentId = widget.assignmentId;
+
+
+                if (name.isEmpty ||
+                    description.isEmpty ||
+                    moduleId.isEmpty || dueDate.isEmpty ) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please fill in all fields'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+                final success = await _lmsService.updateAssignment(
+                    assignmentId, name, description, _parseDate(dueDate), moduleId);
+
+                if (await success) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Assignment updated successfully!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to update Assignment. Please try again.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
             ),
             const SizedBox(height: 20),
 
             _buildPrimaryButton(
               label: 'REMOVE ASSIGNMENT',
-              onTap: () {},
+              onTap: () async {
+                final success = _lmsService.deleteAssignment(widget.assignmentId);
+                if (await success) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Assignment deleted successfully!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to delete Assignment. Please try again.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
               color: Colors.red.shade500,
             ),
           ],
@@ -126,7 +186,20 @@ class _ViewEditAssignmentScreenState extends State<ViewEditAssignmentScreen> {
       ),
     );
   }
-
+  DateTime _parseDate(String date) {
+    try {
+      // Try standard ISO format first (yyyy-MM-dd)
+      return DateTime.parse(date);
+    } catch (_) {
+      // Handle dd/M/yyyy or dd/MM/yyyy
+      final parts = date.split('/');
+      return DateTime(
+        int.parse(parts[2]), // year
+        int.parse(parts[1]), // month
+        int.parse(parts[0]), // day
+      );
+    }
+  }
   /// TEXT INPUT
   Widget _buildInput({required String hint, int maxLines = 1, required TextEditingController controller, bool readOnly = false}) {
     return TextField(
@@ -186,35 +259,7 @@ class _ViewEditAssignmentScreenState extends State<ViewEditAssignmentScreen> {
     Color color =  const Color(0xFF1A1A2E),
   }) {
     return GestureDetector(
-      onTap: () async {
-        // final fullName = _nameController.text.trim();
-        // final studentId = _courseController.text.trim();
-        // final email = _emailController.text.trim();
-        // final password = _batchController.text;
-
-        // Basic validation
-        // if (fullName.isEmpty ||
-        //     studentId.isEmpty ||
-        //     email.isEmpty ||
-        //     password.isEmpty) {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     const SnackBar(
-        //       content: Text('Please fill in all fields'),
-        //       backgroundColor: Colors.red,
-        //     ),
-        //   );
-        //   return;
-        // }
-
-        // Show loading
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Creating student profile...')),
-        );
-
-
-
-
-      },
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         height: 52,
