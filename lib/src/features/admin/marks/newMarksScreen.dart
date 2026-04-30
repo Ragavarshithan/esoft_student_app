@@ -1,123 +1,121 @@
+import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/models/user.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
 class NewMarksScreen extends StatefulWidget {
-  const NewMarksScreen({super.key});
+  final String assignmentId;
+  final String assignmentTitle;
+  final String moduleId;
+  final String moduleName;
+  final String courseId;
+  final String courseName;
+
+  const NewMarksScreen({
+    super.key,
+    required this.assignmentId,
+    required this.assignmentTitle,
+    required this.moduleId,
+    required this.moduleName,
+    required this.courseId,
+    required this.courseName,
+  });
 
   @override
   State<NewMarksScreen> createState() => _NewMarksScreenState();
 }
 
 class _NewMarksScreenState extends State<NewMarksScreen> {
-  DateTime _selectedDate = DateTime(2026, 04, 26);
-  TimeOfDay _selectedTime = const TimeOfDay(hour: 10, minute: 0);
-  List<Map<String, dynamic>> students = [
-    {"name": "Alexander Vance", "id": "STD_88291", "email": "vance.a@esoft.edu", "marks": null},
-    {"name": "Elena Rodriguez", "id": "STD_88304", "email": "rodriguez.e@esoft.edu", "marks": null},
-    {"name": "Julian Thorne", "id": "STD_88412", "email": "thorne.j@esoft.edu", "marks": null},
-    {"name": "Sophia Lin", "id": "STD_88556", "email": "lin.s@esoft.edu", "marks": null},
-  ];
-
-
-  late List<TextEditingController> _controllers;
+  final LMSService _lmsService = LMSService();
+  List<Batch> _batches = [];
+  String? _selectedBatchId;
+  List<Student> _students = [];
+  Map<String, TextEditingController> _controllers = {};
+  bool _isLoadingBatches = true;
+  bool _isLoadingStudents = false;
 
   @override
   void initState() {
     super.initState();
-    _controllers = List.generate(students.length, (_) => TextEditingController());
+    _loadBatches();
   }
 
   @override
   void dispose() {
-    for (var c in _controllers) {
+    for (var c in _controllers.values) {
       c.dispose();
     }
     super.dispose();
   }
-  Future<void> _pickDate() async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF1E3A8A),
-              onPrimary: Colors.white,
-              onSurface: Colors.black,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null) {
-      setState(() => _selectedDate = picked);
+
+  Future<void> _loadBatches() async {
+    final batches = await _lmsService.getBatchByCourseId(courseId: widget.courseId);
+    if (mounted) {
+      setState(() {
+        _batches = batches;
+        _isLoadingBatches = false;
+      });
     }
   }
 
-  Future<void> _pickTime() async {
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF1E3A8A),
-              onPrimary: Colors.white,
-              onSurface: Colors.black,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null) {
-      setState(() => _selectedTime = picked);
+  Future<void> _loadStudents(String batchId) async {
+    setState(() {
+      _isLoadingStudents = true;
+      _students = [];
+      _controllers.clear();
+    });
+
+    final students = await _lmsService.getStudentsByBatchId(batchId: batchId);
+    if (mounted) {
+      setState(() {
+        _students = students;
+        for (var student in students) {
+          _controllers[student.id] = TextEditingController();
+        }
+        _isLoadingStudents = false;
+      });
     }
   }
 
-  String _formatDate(DateTime date) {
-    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    const months = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
-    return "${days[date.weekday - 1]}, ${date.day} ${months[date.month - 1]} ${date.year}";
-  }
-  String _formatTime(TimeOfDay time) {
-    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
-    final minute = time.minute.toString().padLeft(2, '0');
-    final period = time.period == DayPeriod.am ? "AM" : "PM";
-    return "$hour:$minute $period";
-  }
-  void submitMarks() {
-    bool hasEmpty = false;
-    for (int i = 0; i < students.length; i++) {
-      final val = _controllers[i].text.trim();
-      if (val.isEmpty) {
-        hasEmpty = true;
-      } else {
-        students[i]["marks"] = int.tryParse(val);
+  Future<void> _submitMarks() async {
+    if (_selectedBatchId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a batch first')),
+      );
+      return;
+    }
+
+    int count = 0;
+    bool hasError = false;
+
+    for (var student in _students) {
+      final scoreText = _controllers[student.id]?.text.trim() ?? '';
+      if (scoreText.isNotEmpty) {
+        final score = int.tryParse(scoreText);
+        if (score != null) {
+          final success = await _lmsService.submitMark(
+            studentId: student.studentId,
+            assignmentId: widget.assignmentId,
+            score: score,
+            feedback: 'Submitted via Marks Registry',
+          );
+          if (success) {
+            count++;
+          } else {
+            hasError = true;
+          }
+        }
       }
     }
 
-    if (hasEmpty) {
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Some students have no marks entered."),
-          backgroundColor: Colors.orange,
+        SnackBar(
+          content: Text('Marks submitted for $count students.${hasError ? " Some errors occurred." : ""}'),
+          backgroundColor: hasError ? Colors.orange : Colors.green,
         ),
       );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Marks submitted successfully!"),
-          backgroundColor: Colors.green,
-        ),
-      );
+      if (count > 0) Navigator.pop(context);
     }
   }
 
@@ -129,8 +127,7 @@ class _NewMarksScreenState extends State<NewMarksScreen> {
         elevation: 0,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        title: const Text("Module Marks"),
-        actions: const [Icon(Icons.more_vert), SizedBox(width: 10)],
+        title: const Text("Enter Marks"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -141,53 +138,60 @@ class _NewMarksScreenState extends State<NewMarksScreen> {
               "MARKS REGISTRY",
               style: TextStyle(fontSize: 12, color: Colors.blue, fontWeight: FontWeight.w600),
             ),
-            const SizedBox(height: 8),
-            const Text(
-              "Advanced\nMacroeconomics",
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            const SizedBox(height: 4),
+            Text(
+              widget.assignmentTitle,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "${widget.moduleName} | ${widget.courseName}",
+              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
             ),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                _tappableChip(
-                  icon: Icons.calendar_today,
-                  text: _formatDate(_selectedDate),
-                  onTap: _pickDate,
+
+            /// Batch Dropdown
+            _isLoadingBatches
+                ? const LinearProgressIndicator()
+                : Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  hint: const Text("Select Batch"),
+                  isExpanded: true,
+                  value: _selectedBatchId,
+                  items: _batches.map((batch) {
+                    return DropdownMenuItem(
+                      value: batch.id,
+                      child: Text(batch.name),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => _selectedBatchId = value);
+                      _loadStudents(value);
+                    }
+                  },
                 ),
-                const SizedBox(width: 10),
-                _tappableChip(
-                  icon: Icons.access_time,
-                  text: _formatTime(_selectedTime),
-                  onTap: _pickTime,
-                ),
-              ],
+              ),
             ),
-            // const SizedBox(height: 16),
-            // TextField(
-            //   decoration: InputDecoration(
-            //     hintText: "Search student name or ID...",
-            //     prefixIcon: const Icon(Icons.search),
-            //     filled: true,
-            //     fillColor: Colors.grey.shade200,
-            //     border: OutlineInputBorder(
-            //       borderRadius: BorderRadius.circular(12),
-            //       borderSide: BorderSide.none,
-            //     ),
-            //   ),
-            // ),
+
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Student Roll (${students.length})",
+                  "Student Roll (${_students.length})",
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             const SizedBox(height: 10),
 
-            // ✅ Column header labels
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               child: Row(
@@ -199,10 +203,14 @@ class _NewMarksScreenState extends State<NewMarksScreen> {
             ),
 
             Expanded(
-              child: ListView.builder(
-                itemCount: students.length,
+              child: _isLoadingStudents
+                  ? const Center(child: CircularProgressIndicator())
+                  : _students.isEmpty
+                  ? Center(child: Text(_selectedBatchId == null ? "Select a batch to see students" : "No students found in this batch"))
+                  : ListView.builder(
+                itemCount: _students.length,
                 itemBuilder: (context, index) {
-                  final s = students[index];
+                  final student = _students[index];
                   return Container(
                     margin: const EdgeInsets.only(bottom: 10),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -212,24 +220,21 @@ class _NewMarksScreenState extends State<NewMarksScreen> {
                     ),
                     child: Row(
                       children: [
-                        // Student info
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(s["name"], style: const TextStyle(fontWeight: FontWeight.bold)),
-                              Text(s["id"], style: const TextStyle(fontSize: 12)),
-                              Text(s["email"], style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                              Text(student.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                              Text(student.email, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                             ],
                           ),
                         ),
 
-                        // ✅ Per-student marks field
                         SizedBox(
                           width: 72,
                           height: 44,
                           child: TextField(
-                            controller: _controllers[index], // unique controller
+                            controller: _controllers[student.id],
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.center,
                             maxLength: 3,
@@ -241,15 +246,7 @@ class _NewMarksScreenState extends State<NewMarksScreen> {
                               fillColor: Colors.blue.shade50,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.blue.shade200),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(color: Colors.blue, width: 2),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.blue.shade100),
+                                borderSide: BorderSide.none,
                               ),
                             ),
                           ),
@@ -269,41 +266,11 @@ class _NewMarksScreenState extends State<NewMarksScreen> {
                   backgroundColor: const Color(0xFF1E3A8A),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                onPressed: submitMarks,
+                onPressed: _students.isEmpty ? null : _submitMarks,
                 icon: const Icon(Icons.check_circle, color: Colors.white),
-                label: const Text("SUBMIT MARKS", style: TextStyle(color: Colors.white)),
+                label: const Text("SUBMIT MARKS", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _tappableChip({
-    required IconData icon,
-    required String text,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: const Color(0xFF1E3A8A).withOpacity(0.08),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFF1E3A8A).withOpacity(0.25)),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, size: 14, color: const Color(0xFF1E3A8A)),
-            const SizedBox(width: 6),
-            Text(
-              text,
-              style: const TextStyle(fontSize: 12, color: Color(0xFF1E3A8A), fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(width: 4),
-            const Icon(Icons.edit, size: 11, color: Color(0xFF1E3A8A)),
           ],
         ),
       ),

@@ -17,6 +17,7 @@ class LMSService {
       if (token.isNotEmpty) 'Authorization': 'Bearer $token',
     };
   }
+
   // Helper method to handle token refresh logic automatically
   Future<http.Response> _makeRequest(
       Future<http.Response> Function(Map<String, String>) request) async {
@@ -199,7 +200,7 @@ class LMSService {
       if (response.statusCode == 401 || response.statusCode == 403) {
         final newToken = await AuthService().refreshToken();
         if (newToken != null && newToken.isNotEmpty) {
-           response = await http.get(
+          response = await http.get(
             Uri.parse('$_baseUrl/$courseId/batches'),
             headers: {
               'Content-Type': 'application/json',
@@ -216,7 +217,7 @@ class LMSService {
       } else {
         // Log the error or handle it
         print('Failed to create course: ${response.body}');
-        return[];
+        return [];
       }
     } catch (e) {
       print('Exception while creating course: $e');
@@ -301,11 +302,12 @@ class LMSService {
         body["batchId"] = batchId;
       }
 
-      final response = await _makeRequest((headers) => http.post(
-        Uri.parse('$_baseUrl/admin/users'),
-        headers: headers,
-        body: json.encode(body),
-      ));
+      final response = await _makeRequest((headers) =>
+          http.post(
+            Uri.parse('$_baseUrl/admin/users'),
+            headers: headers,
+            body: json.encode(body),
+          ));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
@@ -317,7 +319,7 @@ class LMSService {
       print("Exception: $e");
     }
 
-    return  "error occurred on creating user";;
+    return "error occurred on creating user";;
   }
 
 
@@ -359,10 +361,11 @@ class LMSService {
 
   Future<Lecturer?> getLecturerById(String lecturerId) async {
     try {
-      final response = await _makeRequest((headers) => http.get(
-        Uri.parse('$_baseUrl/lecturers/$lecturerId'),
-        headers: headers,
-      ));
+      final response = await _makeRequest((headers) =>
+          http.get(
+            Uri.parse('$_baseUrl/lecturers/$lecturerId'),
+            headers: headers,
+          ));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         return Lecturer.fromJson(data);
@@ -381,15 +384,16 @@ class LMSService {
     required String email,
   }) async {
     try {
-      final response = await _makeRequest((headers) => http.put(
-        Uri.parse('$_baseUrl/lecturers/$userId'),
-        headers: headers,
-        body: json.encode({
-          "userId":lecturerId,
-          "name": name,
-          "email": email,
-        }),
-      ));
+      final response = await _makeRequest((headers) =>
+          http.put(
+            Uri.parse('$_baseUrl/lecturers/$userId'),
+            headers: headers,
+            body: json.encode({
+              "userId": lecturerId,
+              "name": name,
+              "email": email,
+            }),
+          ));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
@@ -400,16 +404,17 @@ class LMSService {
       print("Exception: $e");
     }
 
-    return  false;
+    return false;
   }
 
 
   Future<bool> deleteLecturer(String lecturerId) async {
     try {
-      final response = await _makeRequest((headers) => http.delete(
-        Uri.parse('$_baseUrl/lecturers/$lecturerId'),
-        headers: headers,
-      ));
+      final response = await _makeRequest((headers) =>
+          http.delete(
+            Uri.parse('$_baseUrl/lecturers/$lecturerId'),
+            headers: headers,
+          ));
       if (response.statusCode == 200) {
         return true;
       }
@@ -422,10 +427,11 @@ class LMSService {
 
   Future<List<Student>> getStudentsByBatchId({required String batchId}) async {
     try {
-      final response = await _makeRequest((headers) => http.get(
-        Uri.parse('$_baseUrl/batches/$batchId/students'),
-        headers: headers,
-      ));
+      final response = await _makeRequest((headers) =>
+          http.get(
+            Uri.parse('$_baseUrl/batches/$batchId/students'),
+            headers: headers,
+          ));
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         final students = data.map((item) => Student.fromJson(item)).toList();
@@ -446,16 +452,17 @@ class LMSService {
     required String batchId
   }) async {
     try {
-      final response = await _makeRequest((headers) => http.put(
-        Uri.parse('$_baseUrl/students/$userId'),
-        headers: headers,
-        body: json.encode({
-          "userId":userId,
-          "name": name,
-          "email": email,
-          "batchId": batchId
-        }),
-      ));
+      final response = await _makeRequest((headers) =>
+          http.put(
+            Uri.parse('$_baseUrl/students/$userId'),
+            headers: headers,
+            body: json.encode({
+              "userId": userId,
+              "name": name,
+              "email": email,
+              "batchId": batchId
+            }),
+          ));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
@@ -466,15 +473,16 @@ class LMSService {
       print("Exception: $e");
     }
 
-    return  false;
+    return false;
   }
 
   Future<bool> deleteStudent(String studentId) async {
     try {
-      final response = await _makeRequest((headers) => http.delete(
-        Uri.parse('$_baseUrl/students/$studentId'),
-        headers: headers,
-      ));
+      final response = await _makeRequest((headers) =>
+          http.delete(
+            Uri.parse('$_baseUrl/students/$studentId'),
+            headers: headers,
+          ));
       if (response.statusCode == 200) {
         return true;
       }
@@ -487,10 +495,11 @@ class LMSService {
 
   Future<List<Module>> getModuleBycourseId({required String courseId}) async {
     try {
-      final response = await _makeRequest((headers) => http.get(
-        Uri.parse('$_baseUrl/courses/$courseId/modules'),
-        headers: headers,
-      ));
+      final response = await _makeRequest((headers) =>
+          http.get(
+            Uri.parse('$_baseUrl/courses/$courseId/modules'),
+            headers: headers,
+          ));
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         final modules = data.map((item) => Module.fromJson(item)).toList();
@@ -510,15 +519,16 @@ class LMSService {
     required String lecturerId
   }) async {
     try {
-      final response = await _makeRequest((headers) => http.put(
-        Uri.parse('$_baseUrl/modules/$moduleId'),
-        headers: headers,
-        body: json.encode({
-          "name": name,
-          "courseId": courseId,
-          "lecturerId": lecturerId
-        }),
-      ));
+      final response = await _makeRequest((headers) =>
+          http.put(
+            Uri.parse('$_baseUrl/modules/$moduleId'),
+            headers: headers,
+            body: json.encode({
+              "name": name,
+              "courseId": courseId,
+              "lecturerId": lecturerId
+            }),
+          ));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
@@ -529,15 +539,16 @@ class LMSService {
       print("Exception: $e");
     }
 
-    return  false;
+    return false;
   }
 
   Future<bool> deleteModule(String moduleId) async {
     try {
-      final response = await _makeRequest((headers) => http.delete(
-        Uri.parse('$_baseUrl/modules/$moduleId'),
-        headers: headers,
-      ));
+      final response = await _makeRequest((headers) =>
+          http.delete(
+            Uri.parse('$_baseUrl/modules/$moduleId'),
+            headers: headers,
+          ));
       if (response.statusCode == 200) {
         return true;
       }
@@ -554,15 +565,16 @@ class LMSService {
     required String lecturerId,
   }) async {
     try {
-      final response = await _makeRequest((headers) => http.post(
-        Uri.parse('$_baseUrl/modules'),
-        headers: headers,
-        body: json.encode({
-          'name': name,
-          'courseId': courseId,
-          'lecturerId': lecturerId,
-        }),
-      ));
+      final response = await _makeRequest((headers) =>
+          http.post(
+            Uri.parse('$_baseUrl/modules'),
+            headers: headers,
+            body: json.encode({
+              'name': name,
+              'courseId': courseId,
+              'lecturerId': lecturerId,
+            }),
+          ));
       return response.statusCode == 200 || response.statusCode == 201;
     } catch (e) {
       print('Exception while creating module: $e');
@@ -572,10 +584,11 @@ class LMSService {
 
   Future<List<Assignment>> getAssignmentsByModuleId(String moduleId) async {
     try {
-      final response = await _makeRequest((headers) => http.get(
-        Uri.parse('$_baseUrl/assignments/module/$moduleId'),
-        headers: headers,
-      ));
+      final response = await _makeRequest((headers) =>
+          http.get(
+            Uri.parse('$_baseUrl/assignments/module/$moduleId'),
+            headers: headers,
+          ));
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         return data.map((item) => Assignment.fromJson(item)).toList();
@@ -587,18 +600,20 @@ class LMSService {
     }
   }
 
-  Future<bool> updateAssignment(String assignmentId, String title, String description, DateTime dueDate,String moduleId) async {
+  Future<bool> updateAssignment(String assignmentId, String title,
+      String description, DateTime dueDate, String moduleId) async {
     try {
-      final response = await _makeRequest((headers) => http.put(
-        Uri.parse('$_baseUrl/assignments/$assignmentId'),
-        headers: headers,
-        body: json.encode({
-          'title': title,
-          'description': description,
-          'dueDate': dueDate.toIso8601String(),
-          'moduleId': moduleId
-        }),
-      ));
+      final response = await _makeRequest((headers) =>
+          http.put(
+            Uri.parse('$_baseUrl/assignments/$assignmentId'),
+            headers: headers,
+            body: json.encode({
+              'title': title,
+              'description': description,
+              'dueDate': dueDate.toIso8601String(),
+              'moduleId': moduleId
+            }),
+          ));
       return response.statusCode == 200;
     } catch (e) {
       print('Exception while updating assignment: $e');
@@ -609,16 +624,18 @@ class LMSService {
 
   Future<bool> deleteAssignment(String assignmentId) async {
     try {
-      final response = await _makeRequest((headers) => http.delete(
-        Uri.parse('$_baseUrl/assignments/$assignmentId'),
-        headers: headers,
-      ));
+      final response = await _makeRequest((headers) =>
+          http.delete(
+            Uri.parse('$_baseUrl/assignments/$assignmentId'),
+            headers: headers,
+          ));
       return response.statusCode == 200 || response.statusCode == 204;
     } catch (e) {
       print('Exception while deleting assignment: $e');
       return false;
     }
   }
+
 
   Future<bool> createAssignment({
     required String moduleId,
@@ -627,16 +644,17 @@ class LMSService {
     required DateTime dueDate,
   }) async {
     try {
-      final response = await _makeRequest((headers) => http.post(
-        Uri.parse('$_baseUrl/assignments'),
-        headers: headers,
-        body: json.encode({
-          'moduleId': moduleId,
-          'title': title,
-          'description': description,
-          'dueDate': dueDate.toIso8601String(),
-        }),
-      ));
+      final response = await _makeRequest((headers) =>
+          http.post(
+            Uri.parse('$_baseUrl/assignments'),
+            headers: headers,
+            body: json.encode({
+              'moduleId': moduleId,
+              'title': title,
+              'description': description,
+              'dueDate': dueDate.toIso8601String(),
+            }),
+          ));
       return response.statusCode == 200 || response.statusCode == 201;
     } catch (e) {
       print('Exception while creating assignment: $e');
@@ -644,12 +662,15 @@ class LMSService {
     }
   }
 
-  Future<List<Attendance>> getAttendance(String moduleId, String studentId) async {
+  Future<List<Attendance>> getAttendance(String moduleId,
+      String studentId) async {
     try {
-      final response = await _makeRequest((headers) => http.get(
-        Uri.parse('$_baseUrl/attendance?moduleId=$moduleId&studentId=$studentId'),
-        headers: headers,
-      ));
+      final response = await _makeRequest((headers) =>
+          http.get(
+            Uri.parse(
+                '$_baseUrl/attendance?moduleId=$moduleId&studentId=$studentId'),
+            headers: headers,
+          ));
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         return data.map((item) => Attendance.fromJson(item)).toList();
@@ -661,5 +682,151 @@ class LMSService {
     }
   }
 
+  Future<List<Attendance>> getAttendanceByModuleId(String moduleId) async {
+    try {
+      final response = await _makeRequest((headers) =>
+          http.get(
+            Uri.parse('$_baseUrl/attendances/module/$moduleId'),
+            headers: headers,
+          ));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.map((item) => Attendance.fromJson(item)).toList();
+      }
+      return [];
+    } catch (e) {
+      print('Exception while loading module attendance: $e');
+      return [];
+    }
+  }
 
+  Future<bool> createEnrollment({
+    required String studentId,
+    required String moduleId,
+  }) async {
+    try {
+      final response = await _makeRequest((headers) =>
+          http.post(
+            Uri.parse('$_baseUrl/enrollments'),
+            headers: headers,
+            body: json.encode({
+              'studentId': studentId,
+              'moduleId': moduleId,
+            }),
+          ));
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      print('Exception while creating enrollment: $e');
+      return false;
+    }
+  }
+
+  Future<Student?> getStudentProfile() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final email = prefs.getString('userEmail') ?? '';
+      if (email.isEmpty) return null;
+
+      final response = await _makeRequest((headers) =>
+          http.get(
+            Uri.parse('$_baseUrl/students/email/$email'),
+            headers: headers,
+          ));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return Student.fromJson(data);
+      }
+      return null;
+    } catch (e) {
+      print('Exception while fetching student profile: $e');
+      return null;
+    }
+  }
+
+  Future<List<Endrollment>> getEnrollmentsByStudentId(String studentId) async {
+    try {
+      final response = await _makeRequest((headers) =>
+          http.get(
+            Uri.parse('$_baseUrl/enrollments/student/$studentId'),
+            headers: headers,
+          ));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.map((item) => Endrollment.fromJson(item)).toList();
+      }
+      return [];
+    } catch (e) {
+      print('Exception while fetching enrollments: $e');
+      return [];
+    }
+  }
+
+  Future<bool> markAttendance({
+    required String studentId,
+    required String moduleId,
+    required DateTime date,
+    required String status, // e.g. "Present", "Absent"
+  }) async {
+    try {
+      final response = await _makeRequest((headers) => http.post(
+        Uri.parse('$_baseUrl/attendances'),
+        headers: headers,
+        body: json.encode({
+          'studentId': studentId,
+          'moduleId': moduleId,
+          'date': date.toIso8601String(),
+          'status': status,
+        }),
+      ));
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      print('Exception while marking attendance: $e');
+      return false;
+    }
+  }
+
+  Future<List<Mark>> getMarksByAssignmentId(String assignmentId) async {
+    try {
+      final response = await _makeRequest((headers) =>
+          http.get(
+            Uri.parse('$_baseUrl/marks/assignment/$assignmentId'),
+            headers: headers,
+          ));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.map((item) => Mark.fromJson(item)).toList();
+      }
+      return [];
+    } catch (e) {
+      print('Exception while loading assignment marks: $e');
+      return [];
+    }
+  }
+
+  Future<bool> submitMark({
+    required String studentId,
+    required String assignmentId,
+    required int score,
+    String? feedback,
+  }) async {
+    try {
+      final response = await _makeRequest((headers) => http.post(
+        Uri.parse('$_baseUrl/marks'),
+        headers: headers,
+        body: json.encode({
+          'studentId': studentId,
+          'assignmentId': assignmentId,
+          'score': score,
+          'feedback': feedback ?? '',
+        }),
+      ));
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      print('Exception while submitting mark: $e');
+      return false;
+    }
+  }
 }
+

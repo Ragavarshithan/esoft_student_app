@@ -1,6 +1,7 @@
 import 'package:esoft_student_app/src/features/auth/landingScreen.dart';
 import 'package:esoft_student_app/src/features/student/assignment/myAssignmentsScreen.dart';
 import 'package:esoft_student_app/src/features/student/attendance/myAttendanceScreen.dart';
+import 'package:esoft_student_app/src/features/student/enrollment/myEnrollmentScreen.dart';
 import 'package:esoft_student_app/src/features/student/marks/my_marks_screen.dart';
 import 'package:esoft_student_app/src/utils/commonWidget.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,7 @@ class StudentDashboard extends ConsumerWidget {
           _DashboardCard(title: 'My Marks', icon: Icons.grade, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyMarksScreen()))),
           _DashboardCard(title: 'Attendance', icon: Icons.calendar_month, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyAttendanceScreen()))),
           _DashboardCard(title: 'Assignments', icon: Icons.assignment, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyAssignmentsScreen()))),
+          // _DashboardCard(title: 'Enrollment', icon: Icons.how_to_reg, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const MyEnrollmentScreen()))),
           _DashboardCard(title: 'Messages', icon: Icons.message, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ChatScreen()))),
         ],
       ),

@@ -53,7 +53,7 @@ class _SelectStudentModuleAttendanceScreen extends ConsumerState<SelectStudentMo
                 trailing: IconButton(
                   icon: const Icon(Icons.edit, color: Colors.grey),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SelectAssignmentScreen(moduleId: '', moduleName: '')));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SelectAssignmentScreen(moduleId: '', moduleName: '', courseId: '', courseName: '',)));
                   },
                 ),
               ),
@@ -69,7 +69,7 @@ class _SelectStudentModuleAttendanceScreen extends ConsumerState<SelectStudentMo
         child: const Icon(Icons.add),
         onPressed: () {
           // Add action hook
-          Navigator.push(context, MaterialPageRoute(builder: (context) => NewMarksScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => NewMarksScreen(assignmentId: '', assignmentTitle: '', moduleId: '', moduleName: '', courseId: '', courseName: '',)));
 
         },
       ),

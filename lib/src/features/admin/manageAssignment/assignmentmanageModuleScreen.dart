@@ -64,7 +64,7 @@ class _AssignmentManageModuleScreen extends ConsumerState<AssignmentManageModule
                 title: Text(module.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: TextButton(
                     onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAssignmentScreen(moduleId: module.id, moduleName: module.name,courseName: module.courseName ?? '',))),
-                    child: const Text('View Batches', style: TextStyle(color: Color(0xFF1E3A8A))),
+                    child: const Text('View Assignments', style: TextStyle(color: Color(0xFF1E3A8A))),
                 ),
               ),
             ),

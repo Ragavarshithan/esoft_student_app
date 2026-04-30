@@ -1,6 +1,8 @@
 import 'package:esoft_student_app/src/features/admin/attendance/selectBatchAttendanceScreen.dart';
+import 'package:esoft_student_app/src/features/admin/attendance/selectModuleAttendanceScreen.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/selectBatchScreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +17,22 @@ class SelectcourseAttendanceScreen extends ConsumerStatefulWidget {
 }
 
 class _SelectcourseAttendanceScreen extends ConsumerState<SelectcourseAttendanceScreen> {
+  final LMSService _lmsService = LMSService();
+  List<Course> _courses = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCourses();
+  }
+
+  Future<void> _loadCourses() async {
+    final courses = await _lmsService.getAllCourses();
+    setState(() {
+      _courses = courses;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
@@ -24,13 +42,13 @@ class _SelectcourseAttendanceScreen extends ConsumerState<SelectcourseAttendance
       appBar: AppBar(
         title: const Text('Select Course'),
       ),
-      body: courses.isEmpty
+      body: _courses.isEmpty
           ? const Center(child: Text('No course found.'))
           : ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: courses.length,
+        itemCount: _courses.length,
         itemBuilder: (context, index) {
-          final course = courses[index];
+          final course = _courses[index];
 
           return InkWell(
             child: Card(
@@ -42,13 +60,13 @@ class _SelectcourseAttendanceScreen extends ConsumerState<SelectcourseAttendance
                 ),
                 title: Text(course.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: TextButton(
-                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => SelectBatchAttendanceScreen(batchId: course.id,course: course.name,courseId: course.id,batchName:"" ,))),
-                    child: const Text('View Batches', style: TextStyle(color: Color(0xFF1E3A8A))),
+                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => SelectModuleAttendanceScreen(courseId: course.id, courseName: course.name, batchId: ''))),
+                    child: const Text('View Modules', style: TextStyle(color: Color(0xFF1E3A8A))),
                 ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectBatchAttendanceScreen(batchId: course.id,course: course.name,courseId: course.id,batchName:"" ,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectModuleAttendanceScreen(courseId: course.id, courseName: course.name, batchId: '')));
             },
           );
         },

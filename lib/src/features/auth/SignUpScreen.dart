@@ -406,7 +406,7 @@ class _SignupScreenState extends State<SignupScreen>
             ),
           );
           // Navigate to OTP screen
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const OtpScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(email: email)));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(

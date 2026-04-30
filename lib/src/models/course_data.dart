@@ -192,7 +192,7 @@ class Attendance {
     moduleName: json['moduleName'],
     studentId: json['studentId'],
     studentName: json['studentName'],
-    date: json['date'],
+    date: DateTime.parse(json['date']),
     status: json['status'],
   );
 

@@ -6,6 +6,7 @@ import 'package:esoft_student_app/src/models/course_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../services/lms_service.dart';
 import '../../../services/mock_data_service.dart';
 import '../../../models/user.dart';
 
@@ -20,23 +21,41 @@ class SelectModuleAttendanceScreen extends ConsumerStatefulWidget {
 }
 
 class _SelectModuleAttendanceScreen extends ConsumerState<SelectModuleAttendanceScreen> {
+  final LMSService _lmsService = LMSService();
+  List<Module> _modules = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadModules();
+  }
+
+  Future<void> _loadModules() async {
+    final modules = await _lmsService.getModuleBycourseId(courseId: widget.courseId);
+    if (mounted) {
+      setState(() {
+        _modules = modules;
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final mockService = ref.watch(mockDataServiceProvider);
-    final modules = mockService.modules.where((m) => m.courseId == widget.courseId).toList();
-
-
     return Scaffold(
       appBar: AppBar(
-        title:  Text('${widget.courseName}'),
+        title: Text('${widget.courseName}'),
       ),
-      body: modules.isEmpty
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _modules.isEmpty
           ? const Center(child: Text('No Module found.'))
           : ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: modules.length,
+        itemCount: _modules.length,
         itemBuilder: (context, index) {
-          final module = modules[index];
+          final module = _modules[index];
 
           return InkWell(
             child: Card(
@@ -48,14 +67,33 @@ class _SelectModuleAttendanceScreen extends ConsumerState<SelectModuleAttendance
                 ),
                 title: Text(module.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: TextButton(
-                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAttendanceScreen(batchId: '', batch: '', course: ''))),
-                    child: const Text('View Attendance', style: TextStyle(color: Color(0xFF1E3A8A))),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ManageAttendanceScreen(
+                        moduleId: module.id,
+                        moduleName: module.name,
+                        courseId: widget.courseId,
+                        courseName: widget.courseName,
+                      ),
+                    ),
+                  ),
+                  child: const Text('View Attendance', style: TextStyle(color: Color(0xFF1E3A8A))),
                 ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAttendanceScreen(batchId: '', batch: '', course: '')));
-
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ManageAttendanceScreen(
+                    moduleId: module.id,
+                    moduleName: module.name,
+                    courseId: widget.courseId,
+                    courseName: widget.courseName,
+                  ),
+                ),
+              );
             },
           );
         },

@@ -7,8 +7,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
+import 'loginScreen.dart';
+
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({Key? key}) : super(key: key);
+  final String email;
+  const OtpScreen({Key? key, required this.email}) : super(key: key);
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -17,17 +20,11 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen>
     with SingleTickerProviderStateMixin {
   late final TextEditingController pinController;
-  late TextEditingController emailController;
-  late TextEditingController passwordController;
   late AnimationController _animationController;
-  bool rememberDevice = false;
-  bool passwordVisible = false;
 
   @override
   void initState() {
     super.initState();
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
     pinController = TextEditingController();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
@@ -37,8 +34,7 @@ class _OtpScreenState extends State<OtpScreen>
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
+    pinController.dispose();
     _animationController.dispose();
     super.dispose();
   }
@@ -47,13 +43,13 @@ class _OtpScreenState extends State<OtpScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              const Color(0xFFF5F5F5),
-              const Color(0xFFEEEEEE),
+              Color(0xFFF5F5F5),
+              Color(0xFFEEEEEE),
             ],
           ),
         ),
@@ -73,7 +69,7 @@ class _OtpScreenState extends State<OtpScreen>
                 ),
                 child: FadeTransition(
                   opacity: _animationController,
-                  child: _buildLoginCard(),
+                  child: _buildOtpCard(),
                 ),
               ),
             ),
@@ -83,7 +79,7 @@ class _OtpScreenState extends State<OtpScreen>
     );
   }
 
-  Widget _buildLoginCard() {
+  Widget _buildOtpCard() {
     return Container(
       constraints: const BoxConstraints(maxWidth: 400),
       decoration: BoxDecoration(
@@ -95,11 +91,6 @@ class _OtpScreenState extends State<OtpScreen>
             blurRadius: 24,
             offset: const Offset(0, 4),
           ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 1),
-          ),
         ],
       ),
       padding: const EdgeInsets.all(40),
@@ -108,34 +99,24 @@ class _OtpScreenState extends State<OtpScreen>
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildHeader(),
-          const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'ONE-TIME PASSWORD',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF666666),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text('RESEND CODE'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-          _otpField(),
           const SizedBox(height: 20),
-          // Remember device checkbox
-          _buildRememberDeviceCheckbox(),
-          const SizedBox(height: 24),
-
-          // Sign in button
-          _buildSignInButton(),
-          const SizedBox(height: 24),
+          Text(
+            'We have sent a verification code to:',
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+          ),
+          Text(
+            widget.email,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          ),
+          const SizedBox(height: 30),
+          _otpField(),
+          const SizedBox(height: 30),
+          _buildVerifyButton(),
+          const SizedBox(height: 20),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Back to Sign Up'),
+          ),
         ],
       ),
     );
@@ -149,155 +130,95 @@ class _OtpScreenState extends State<OtpScreen>
           width: 48,
           height: 48,
           decoration: BoxDecoration(
-            color: const Color(0xFF001F3F),
+            color: const Color(0xFF1A1A2E),
             borderRadius: BorderRadius.circular(8),
           ),
-          child:const Icon(Icons.school, size: 28, color: Colors.white),
+          child: const Icon(Icons.mark_email_read_outlined, size: 28, color: Colors.white),
         ),
         const SizedBox(height: 16),
         const Text(
-          'Esoft UNI',
+          'Verify OTP',
           style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
-            color: Color(0xFF666666),
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1A1A2E),
           ),
         ),
       ],
     );
   }
 
-
   Widget _otpField() {
     return Pinput(
       controller: pinController,
       keyboardType: TextInputType.number,
-      length: 4,
-      separatorBuilder: (index) => const SizedBox(width: 10),
+      length: 6, // Changed to 6 as it's common, but keep 4 if backend says 4
+      separatorBuilder: (index) => const SizedBox(width: 8),
       defaultPinTheme: PinTheme(
-        width: 55,
+        width: 45,
         height: 55,
-        textStyle: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
+        textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         decoration: BoxDecoration(
-          color: const Color(0xFFEDEDED),
+          color: const Color(0xFFF3F3F7),
           borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-
-      hapticFeedbackType: HapticFeedbackType.lightImpact,
-
-      onCompleted: (pin) {
-        debugPrint('OTP: $pin');
-      },
-
-      onChanged: (value) {
-        debugPrint('Typing: $value');
-      },
-    );
-  }
-
-  Widget _buildRememberDeviceCheckbox() {
-    return SizedBox(
-      height: 24,
-      child: CheckboxListTile(
-        value: rememberDevice,
-        onChanged: (value) {
-          setState(() {
-            rememberDevice = value ?? false;
-          });
-        },
-        controlAffinity: ListTileControlAffinity.leading,
-        contentPadding: EdgeInsets.zero,
-        title: const Text(
-          'Remember this device',
-          style: TextStyle(
-            fontSize: 14,
-            color: Color(0xFF333333),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: Colors.grey.shade300),
         ),
       ),
     );
   }
 
-
-
-  Widget _buildSignInButton() {
+  Widget _buildVerifyButton() {
     return ElevatedButton(
       onPressed: () async {
-        final email = emailController.text.trim();
-        final password = passwordController.text;
-
-        // Basic validation
-        if (email.isEmpty || password.isEmpty) {
+        final otp = pinController.text.trim();
+        if (otp.length < 4) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Please enter both email and password'),
-              backgroundColor: Colors.red,
-            ),
+            const SnackBar(content: Text('Please enter a valid OTP')),
           );
           return;
         }
 
-        // Show loading indicator
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Signing in...')),
+          const SnackBar(content: Text('Verifying...')),
         );
 
-        // Attempt login
         final authService = AuthService();
-        final success = await authService.login(
-          email: email,
-          password: password,
+        final success = await authService.verifyOtp(
+          email: widget.email,
+          otp: otp,
         );
+
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
         if (success) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Welcome back, ${authService.currentUser!.name}!'),
+            const SnackBar(
+              content: Text('Verification successful! You can now sign in.'),
               backgroundColor: Colors.green,
             ),
           );
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminRoot()));
-          // Navigate to home screen or dashboard
-          // Navigator.pushReplacementNamed(context, '/home');
+          // Navigate to Login Screen
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+            (route) => false,
+          );
         } else {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Invalid email or password'),
+              content: Text('Invalid OTP. Please try again.'),
               backgroundColor: Colors.red,
             ),
           );
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF001F3F),
+        backgroundColor: const Color(0xFF1A1A2E),
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
-      child: const Text(
-        'SIGN IN',
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.5,
-        ),
-      ),
+      child: const Text('VERIFY OTP', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2)),
     );
   }
-
-
 }

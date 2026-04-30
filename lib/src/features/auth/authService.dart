@@ -82,6 +82,28 @@ class AuthService {
     }
   }
 
+  // Verify OTP
+  Future<bool> verifyOtp({
+    required String email,
+    required String otp,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/auth/verify-otp'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': email,
+          'otp': otp,
+        }),
+      );
+
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      print('Exception during OTP verification: $e');
+      return false;
+    }
+  }
+
   // Refresh Token
   Future<String?> refreshToken() async {
     try {

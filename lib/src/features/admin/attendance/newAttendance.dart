@@ -1,41 +1,72 @@
+import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/models/user.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
 class NewAttendanceScreen extends StatefulWidget {
-  const NewAttendanceScreen({super.key});
+  final String courseId;
+  final String courseName;
+  final String moduleId;
+  final String moduleName;
+
+  const NewAttendanceScreen({
+    super.key,
+    required this.courseId,
+    required this.courseName,
+    required this.moduleId,
+    required this.moduleName,
+  });
 
   @override
   State<NewAttendanceScreen> createState() => _NewAttendanceScreenState();
 }
 
 class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
-  DateTime _selectedDate = DateTime(2026, 04, 26);
-  TimeOfDay _selectedTime = const TimeOfDay(hour: 10, minute: 0);
-  List<Map<String, dynamic>> students = [
-    {
-      "name": "Alexander Vance",
-      "id": "STD_88291",
-      "email": "vance.a@esoft.edu",
-      "present": true
-    },
-    {
-      "name": "Elena Rodriguez",
-      "id": "STD_88304",
-      "email": "rodriguez.e@esoft.edu",
-      "present": false
-    },
-    {
-      "name": "Julian Thorne",
-      "id": "STD_88412",
-      "email": "thorne.j@esoft.edu",
-      "present": null
-    },
-    {
-      "name": "Sophia Lin",
-      "id": "STD_88556",
-      "email": "lin.s@esoft.edu",
-      "present": true
-    },
-  ];
+  final LMSService _lmsService = LMSService();
+  DateTime _selectedDate = DateTime.now();
+  TimeOfDay _selectedTime = TimeOfDay.now();
+  
+  List<Batch> _batches = [];
+  String? _selectedBatchId;
+  List<Student> _students = [];
+  Map<String, bool?> _attendanceStatus = {};
+  bool _isLoadingBatches = true;
+  bool _isLoadingStudents = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBatches();
+  }
+
+  Future<void> _loadBatches() async {
+    final batches = await _lmsService.getBatchByCourseId(courseId: widget.courseId);
+    if (mounted) {
+      setState(() {
+        _batches = batches;
+        _isLoadingBatches = false;
+      });
+    }
+  }
+
+  Future<void> _loadStudents(String batchId) async {
+    setState(() {
+      _isLoadingStudents = true;
+      _students = [];
+      _attendanceStatus = {};
+    });
+
+    final students = await _lmsService.getStudentsByBatchId(batchId: batchId);
+    if (mounted) {
+      setState(() {
+        _students = students;
+        for (var student in students) {
+          _attendanceStatus[student.id] = null;
+        }
+        _isLoadingStudents = false;
+      });
+    }
+  }
 
   Future<void> _pickDate() async {
     final picked = await showDatePicker(
@@ -91,6 +122,7 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
     ];
     return "${days[date.weekday - 1]}, ${date.day} ${months[date.month - 1]} ${date.year}";
   }
+
   String _formatTime(TimeOfDay time) {
     final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
     final minute = time.minute.toString().padLeft(2, '0');
@@ -98,18 +130,39 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
     return "$hour:$minute $period";
   }
 
-  void markAllPresent() {
-    setState(() {
-      for (var s in students) {
-        s["present"] = true;
+  Future<void> markAllPresent() async {
+    for (var student in _students) {
+      if (_attendanceStatus[student.studentId] != true) {
+        setState(() {
+          _attendanceStatus[student.studentId] = true;
+        });
+        await _lmsService.markAttendance(
+          studentId: student.studentId,
+          moduleId: widget.moduleId,
+          date: _selectedDate,
+          status: 'PRESENT',
+        );
       }
-    });
+    }
   }
 
-  void setAttendance(int index, bool value) {
+  Future<void> setAttendance(String studentId, bool value) async {
     setState(() {
-      students[index]["present"] = value;
+      _attendanceStatus[studentId] = value;
     });
+    
+    final success = await _lmsService.markAttendance(
+      studentId: studentId,
+      moduleId: widget.moduleId,
+      date: _selectedDate,
+      status: value ? 'PRESENT' : 'ABSENT',
+    );
+
+    if (!success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to update attendance')),
+      );
+    }
   }
 
   @override
@@ -120,11 +173,7 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
         elevation: 0,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        title: const Text("Module Attendance"),
-        actions: const [
-          Icon(Icons.more_vert),
-          SizedBox(width: 10)
-        ],
+        title: const Text("New Attendance"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -139,14 +188,54 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 8),
-            const Text(
-              "Advanced\nMacroeconomics",
-              style: TextStyle(
-                fontSize: 28,
+            const SizedBox(height: 4),
+            Text(
+              widget.moduleName,
+              style: const TextStyle(
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            Text(
+              widget.courseName,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade600,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            /// Batch Dropdown
+            _isLoadingBatches
+                ? const LinearProgressIndicator()
+                : Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  hint: const Text("Select Batch"),
+                  isExpanded: true,
+                  value: _selectedBatchId,
+                  items: _batches.map((batch) {
+                    return DropdownMenuItem(
+                      value: batch.id,
+                      child: Text(batch.name),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => _selectedBatchId = value);
+                      _loadStudents(value);
+                    }
+                  },
+                ),
+              ),
+            ),
+
             const SizedBox(height: 16),
 
             /// Date + Time
@@ -168,35 +257,20 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
 
             const SizedBox(height: 16),
 
-            /// Search
-            TextField(
-              decoration: InputDecoration(
-                hintText: "Search student name or ID...",
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.grey.shade200,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
             /// Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Student Roll (${students.length})",
+                  "Student Roll (${_students.length})",
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                TextButton(
-                  onPressed: markAllPresent,
-                  child: const Text("MARK ALL PRESENT"),
-                )
+                if (_students.isNotEmpty)
+                  TextButton(
+                    onPressed: markAllPresent,
+                    child: const Text("MARK ALL PRESENT"),
+                  )
               ],
             ),
 
@@ -204,10 +278,15 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
 
             /// List
             Expanded(
-              child: ListView.builder(
-                itemCount: students.length,
+              child: _isLoadingStudents
+                  ? const Center(child: CircularProgressIndicator())
+                  : _students.isEmpty
+                  ? Center(child: Text(_selectedBatchId == null ? "Select a batch to see students" : "No students found in this batch"))
+                  : ListView.builder(
+                itemCount: _students.length,
                 itemBuilder: (context, index) {
-                  final s = students[index];
+                  final student = _students[index];
+                  final status = _attendanceStatus[student.id];
 
                   return Container(
                     margin: const EdgeInsets.only(bottom: 10),
@@ -221,6 +300,7 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
                         const CircleAvatar(
                           radius: 22,
                           backgroundColor: Colors.grey,
+                          child: Icon(Icons.person, color: Colors.white),
                         ),
                         const SizedBox(width: 12),
 
@@ -230,16 +310,12 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                s["name"],
+                                student.name,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                s["id"],
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                s["email"],
+                                student.email,
                                 style: const TextStyle(
                                     fontSize: 12, color: Colors.grey),
                               ),
@@ -253,15 +329,15 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
                             _statusButton(
                               icon: Icons.check,
                               color: Colors.green,
-                              active: s["present"] == true,
-                              onTap: () => setAttendance(index, true),
+                              active: status == true,
+                              onTap: () => setAttendance(student.studentId, true),
                             ),
                             const SizedBox(width: 8),
                             _statusButton(
                               icon: Icons.close,
                               color: Colors.red,
-                              active: s["present"] == false,
-                              onTap: () => setAttendance(index, false),
+                              active: status == false,
+                              onTap: () => setAttendance(student.studentId, false),
                             ),
                           ],
                         )
@@ -272,19 +348,18 @@ class _NewAttendanceScreenState extends State<NewAttendanceScreen> {
               ),
             ),
 
-            /// Submit Button
+            /// Done Button
             SizedBox(
               width: double.infinity,
               height: 55,
-              child: ElevatedButton.icon(
+              child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1E3A8A),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                 ),
-                onPressed: () {},
-                icon: const Icon(Icons.check_box_outlined, color: Colors.white),
-                label: const Text("SUBMIT ATTENDANCE", style: TextStyle(color: Colors.white)),
+                onPressed: () => Navigator.pop(context),
+                child: const Text("DONE", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
               ),
             )
           ],

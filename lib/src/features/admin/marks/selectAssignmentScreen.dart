@@ -1,40 +1,79 @@
-import 'package:esoft_student_app/src/features/admin/manageAssignment/newAssignmentScreen.dart';
-import 'package:esoft_student_app/src/features/admin/manageAssignment/viewEditAssignmentScreen.dart';
 import 'package:esoft_student_app/src/features/admin/marks/manageMarksscreen.dart';
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../services/mock_data_service.dart';
 
 class SelectAssignmentScreen extends ConsumerStatefulWidget {
   final String moduleId;
   final String moduleName;
-  const SelectAssignmentScreen({super.key, required this.moduleId, required this.moduleName});
+  final String courseId;
+  final String courseName;
+  const SelectAssignmentScreen({
+    super.key,
+    required this.moduleId,
+    required this.moduleName,
+    required this.courseId,
+    required this.courseName,
+  });
 
   @override
   ConsumerState<SelectAssignmentScreen> createState() => _SelectAssignmentScreen();
 }
 
 class _SelectAssignmentScreen extends ConsumerState<SelectAssignmentScreen> {
+  final LMSService _lmsService = LMSService();
+  List<Assignment> _assignments = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAssignments();
+  }
+
+  Future<void> _loadAssignments() async {
+    final assignments = await _lmsService.getAssignmentsByModuleId(widget.moduleId);
+    if (mounted) {
+      setState(() {
+        _assignments = assignments;
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final mockService = ref.watch(mockDataServiceProvider);
-    final assignments = mockService.assignments.where((a) => a.moduleId == widget.moduleId).toList();
-
-
     return Scaffold(
       appBar: AppBar(
-        title:  Text('${widget.moduleName}'),
+        title: Text(widget.moduleName),
       ),
-      body: assignments.isEmpty
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _assignments.isEmpty
           ? const Center(child: Text('No assignments found.'))
           : ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: assignments.length,
+        itemCount: _assignments.length,
         itemBuilder: (context, index) {
-          final assignment = assignments[index];
+          final assignment = _assignments[index];
 
           return InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ManageMarksScreen(
+                    assignmentId: assignment.id,
+                    assignmentTitle: assignment.title,
+                    moduleId: widget.moduleId,
+                    moduleName: widget.moduleName,
+                    courseId: widget.courseId,
+                    courseName: widget.courseName,
+                  ),
+                ),
+              );
+            },
             child: Card(
               margin: const EdgeInsets.only(bottom: 12),
               child: ListTile(
@@ -43,16 +82,9 @@ class _SelectAssignmentScreen extends ConsumerState<SelectAssignmentScreen> {
                   child: Icon(Icons.assignment, color: Colors.white),
                 ),
                 title: Text(assignment.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                trailing: TextButton(
-                    onPressed: ()=>   Navigator.push(context, MaterialPageRoute(builder: (context) =>  ManageMarksScreen( batchId: '', batch: '', course: '',))),
-                    child: Text("View Marks", style: TextStyle(color: Color(0xFF1E3A8A)),)
-                ),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 14),
               ),
             ),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) =>  ManageMarksScreen( batchId: '', batch: '', course: '',)));
-
-            },
           );
         },
       ),
