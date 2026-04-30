@@ -1,4 +1,5 @@
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/models/user.dart';
 import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,10 @@ class _ViewEditModuleScreenState extends State<ViewEditModuleScreen> {
   final _creditsController = TextEditingController();
   final _descriptionController = TextEditingController();
 
+  List<Lecturer> _lecturers = [];
+  String? _selectedLecturerId;
+  bool _isLoadingLecturers = false;
+
   @override
   void initState() {
     super.initState();
@@ -25,7 +30,47 @@ class _ViewEditModuleScreenState extends State<ViewEditModuleScreen> {
     _creditsController.text = 2.5.toString();
     _descriptionController.text = widget.moduleData.name;
     _courseNameController.text = widget.moduleData.courseName!;
+    _selectedLecturerId = widget.moduleData.lecturerId;
+    
+    // Initialize with current lecturer info to show immediately
+    _lecturers = [
+      Lecturer(
+        id: widget.moduleData.lecturerId, 
+        name: widget.moduleData.lecturerName ?? 'Unknown Lecturer', 
+        email: '', 
+        lecturerId: '' 
+      )
+    ];
 
+    _loadLecturers();
+  }
+
+  Future<void> _loadLecturers() async {
+    try {
+      final lecturers = await _lmsService.getAllLecturers();
+      setState(() {
+        _lecturers = lecturers;
+        
+        // If the current lecturer isn't in the fetched list, add them back
+        // to prevent DropdownButton crash and ensure they are displayed.
+        if (_selectedLecturerId != null && 
+            !_lecturers.any((l) => l.id == _selectedLecturerId)) {
+          _lecturers.insert(0, Lecturer(
+            id: widget.moduleData.lecturerId,
+            name: widget.moduleData.lecturerName ?? 'Unknown Lecturer',
+            email: '',
+            lecturerId: '',
+          ));
+        }
+      });
+    } catch (e) {
+      setState(() {
+        _isLoadingLecturers = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to load lecturers')),
+      );
+    }
   }
 
   @override
@@ -89,27 +134,72 @@ class _ViewEditModuleScreenState extends State<ViewEditModuleScreen> {
                 textinputtype: TextInputType.number
             ),
 
+            /// Lecturer
+            _buildLabel("Lecturer"),
+            _isLoadingLecturers
+                ? const Center(child: CircularProgressIndicator())
+                : Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _selectedLecturerId,
+                        hint: const Text("Select Lecturer"),
+                        isExpanded: true,
+                        items: _lecturers.map((lecturer) {
+                          return DropdownMenuItem<String>(
+                            value: lecturer.id,
+                            child: Text(lecturer.name),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedLecturerId = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+
 
 
             const SizedBox(height: 30),
 
             _buildPrimaryButton(
-              label: 'CREATE MODULE',
+              label: 'UPDATE MODULE',
               onTap: () async {
-                final success = _lmsService.updateModule(
+                if(
+                  _moduleTitleController.text.isEmpty ||
+                  _courseNameController.text.isEmpty ||
+                  _creditsController.text.isEmpty ||
+                      _selectedLecturerId!.isEmpty ||
+                  _descriptionController.text.isEmpty
+                ){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please fill in all fields'),
+                      backgroundColor: Colors.red,
+                    ),
+
+                  );
+                  return;
+                }
+                final success = await _lmsService.updateModule(
                   moduleId: widget.moduleData.id,
                   name: _moduleTitleController.text,
                   courseId: widget.moduleData.courseId,
-                 lecturerId: widget.moduleData.lecturerId
+                 lecturerId: _selectedLecturerId ?? widget.moduleData.lecturerId
                 );
-                if (await success) {
-                  Navigator.pop(context);
+                if (success) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('module updated successfully!'),
                       backgroundColor: Colors.green,
                     ),
                   );
+                  Navigator.pop(context, true);
                 } else{
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -129,7 +219,7 @@ class _ViewEditModuleScreenState extends State<ViewEditModuleScreen> {
               onTap: () async {
                 final success = _lmsService.deleteModule(widget.moduleData.id);
                 if (await success) {
-                  Navigator.pop(context);
+                  Navigator.pop(context, true);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('lecturer deleted successfully!'),
@@ -196,35 +286,7 @@ class _ViewEditModuleScreenState extends State<ViewEditModuleScreen> {
     Color color = const Color(0xFF1A1A2E),
   }) {
     return GestureDetector(
-      onTap: () async {
-        // final fullName = _nameController.text.trim();
-        // final studentId = _courseController.text.trim();
-        // final email = _emailController.text.trim();
-        // final password = _batchController.text;
-
-        // Basic validation
-        // if (fullName.isEmpty ||
-        //     studentId.isEmpty ||
-        //     email.isEmpty ||
-        //     password.isEmpty) {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     const SnackBar(
-        //       content: Text('Please fill in all fields'),
-        //       backgroundColor: Colors.red,
-        //     ),
-        //   );
-        //   return;
-        // }
-
-        // Show loading
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Creating student profile...')),
-        );
-
-
-
-
-      },
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         height: 52,

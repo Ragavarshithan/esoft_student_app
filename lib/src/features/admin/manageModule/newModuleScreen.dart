@@ -1,4 +1,5 @@
 import 'package:esoft_student_app/src/models/course_data.dart';
+import 'package:esoft_student_app/src/models/user.dart';
 import 'package:esoft_student_app/src/services/lms_service.dart';
 import 'package:flutter/material.dart';
 
@@ -18,11 +19,38 @@ class _newModuleScreenState extends State<newModuleScreen> {
   final _creditsController = TextEditingController();
   final _descriptionController = TextEditingController();
 
+  List<Lecturer> _lecturers = [];
+  String? _selectedLecturerId;
+  bool _isLoadingLecturers = true;
+
   @override
   void initState() {
     super.initState();
     _courseNameController.text = widget.courseName!;
+    _loadLecturers();
+  }
 
+  Future<void> _loadLecturers() async {
+    try {
+      final lecturers = await _lmsService.getAllLecturers();
+      setState(() {
+        _lecturers = lecturers;
+        _isLoadingLecturers = false;
+
+        // Ensure selected ID exists in the list to avoid DropdownButton crash
+        if (_selectedLecturerId != null &&
+            !_lecturers.any((l) => l.id == _selectedLecturerId)) {
+          _selectedLecturerId = null;
+        }
+      });
+    } catch (e) {
+      setState(() {
+        _isLoadingLecturers = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to load lecturers')),
+      );
+    }
   }
 
   @override
@@ -86,19 +114,42 @@ class _newModuleScreenState extends State<newModuleScreen> {
                 textinputtype: TextInputType.number
             ),
 
-
-
-
-
-
+            /// Lecturer
+            _buildLabel("Lecturer"),
+            _isLoadingLecturers
+                ? const Center(child: CircularProgressIndicator())
+                : Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _selectedLecturerId,
+                        hint: const Text("Select Lecturer"),
+                        isExpanded: true,
+                        items: _lecturers.map((lecturer) {
+                          return DropdownMenuItem<String>(
+                            value: lecturer.id,
+                            child: Text(lecturer.name),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedLecturerId = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
             const SizedBox(height: 30),
-
             _buildPrimaryButton(
               label: 'CREATE MODULE',
               onTap: () async{
                 final name = _moduleTitleController.text.trim();
                 final courseId = widget.courseId;
-                final lecturerId = "";
+                final lecturerId = _selectedLecturerId ?? "";
 
                 if (name.isEmpty ||
                     courseId.isEmpty ||
@@ -115,8 +166,8 @@ class _newModuleScreenState extends State<newModuleScreen> {
                     name: name, courseId: courseId,
                     lecturerId: lecturerId);
 
-                if (await success) {
-                  Navigator.pop(context);
+                if (success) {
+                  Navigator.pop(context, true);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('module created successfully!'),

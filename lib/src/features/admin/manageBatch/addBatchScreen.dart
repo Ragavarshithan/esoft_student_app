@@ -142,8 +142,6 @@ class _AddBatchScreenState extends State<AddBatchScreen>
                           // Clear inputs
                           _newBatchNameController.clear();
                           _yearController.clear();
-
-                          // Pop screen and return true to indicate success
                           Navigator.pop(context, true);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(

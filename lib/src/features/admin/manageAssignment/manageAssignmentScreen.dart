@@ -62,9 +62,12 @@ class _ManageAssignmentScreen extends ConsumerState<ManageAssignmentScreen> {
                 title: Text(assignment.title, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: IconButton(
                   icon: const Icon(Icons.edit, color: Colors.grey),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) =>  ViewEditAssignmentScreen(course: widget.courseName, module: widget.moduleName, assignmentTitle: assignment.title, dueDate: assignment.dueDate, description: assignment.description,moduleId: assignment.moduleId,assignmentId: assignment.id,)));
-                  },
+                  onPressed: () async{
+                    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ViewEditAssignmentScreen(course: widget.courseName, module: widget.moduleName, assignmentTitle: assignment.title, dueDate: assignment.dueDate, description: assignment.description,moduleId: assignment.moduleId,assignmentId: assignment.id,)));
+                    if(result == true) {
+                      _loadAssignments();
+                    }
+                    },
                 ),
               ),
             ),
@@ -78,9 +81,11 @@ class _ManageAssignmentScreen extends ConsumerState<ManageAssignmentScreen> {
         backgroundColor: const Color(0xFF1E3A8A),
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
-        onPressed: () {
-          // Add action hook
-         Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreateAssignmentScreen(course: widget.courseName, module: widget.moduleName,moduleId: widget.moduleId,)));
+        onPressed: () async{
+         final result = await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreateAssignmentScreen(course: widget.courseName, module: widget.moduleName,moduleId: widget.moduleId,)));
+        if(result == true) {
+          _loadAssignments();
+        }
         },
       ),
     );

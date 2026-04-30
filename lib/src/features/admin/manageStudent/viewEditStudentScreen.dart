@@ -189,7 +189,7 @@ class _ViewEditStudentScreenState extends State<ViewEditStudentScreen>
                       onTap: () async {
                         final success = _lmsService.deleteStudent(widget.studentId);
                         if (await success) {
-                          Navigator.pop(context);
+                          Navigator.pop(context,true);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('student deleted successfully!'),

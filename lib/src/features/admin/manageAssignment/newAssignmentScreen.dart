@@ -136,7 +136,7 @@ class _CreateAssignmentScreenState extends State<CreateAssignmentScreen> {
                    );
 
                 if (await success) {
-                  Navigator.pop(context);
+                  Navigator.pop(context,true);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Assignment updated successfully!'),

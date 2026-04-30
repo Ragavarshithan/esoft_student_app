@@ -61,10 +61,10 @@ class _ManageCourseScreen extends ConsumerState<ManageCourseScreen> {
                 title: Text(course.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: IconButton(
                   icon: const Icon(Icons.edit, color: Colors.grey),
-                  onPressed: () {
-                    final result = Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditCourseScreen(courseData: course)));
+                  onPressed: () async {
+                    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditCourseScreen(courseData: course)));
                     if (result == true) {
-                      _loadCourses(); // Refresh list after updating
+                      _loadCourses();
                     }
                    },
                 ),
@@ -82,7 +82,7 @@ class _ManageCourseScreen extends ConsumerState<ManageCourseScreen> {
         onPressed: () async {
           final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => newCourseScreen()));
           if (result == true) {
-            _loadCourses(); // Refresh list after adding
+            _loadCourses();
           }
         },
       ),

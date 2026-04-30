@@ -61,10 +61,12 @@ class _ManageLecturerScreen extends ConsumerState<ManageLecturerScreen> {
                 title: Text(lecturer.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: IconButton(
                   icon: const Icon(Icons.edit, color: Colors.grey),
-                  onPressed: () {
-                    // Edit generic action
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditLecturerScreen(lecturerId: lecturer.lecturerId,userId: lecturer.id, )));
-                     },
+                  onPressed: () async {
+                    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditLecturerScreen(lecturerId: lecturer.lecturerId,userId: lecturer.id, )));
+                    if(result == true){
+                      _loadLecturers();
+                    }
+                    },
                 ),
               ),
             ),
@@ -78,9 +80,12 @@ class _ManageLecturerScreen extends ConsumerState<ManageLecturerScreen> {
         backgroundColor: const Color(0xFF1E3A8A),
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
-        onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => AddLecturerScreen()));
-         },
+        onPressed: () async {
+        final result = Navigator.push(context, MaterialPageRoute(builder: (context) => AddLecturerScreen()));
+        if(result == true){
+          _loadLecturers();
+        }
+        },
       ),
     );
   }

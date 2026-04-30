@@ -64,8 +64,11 @@ class _ManageModuleScreen extends ConsumerState<ManageModuleScreen> {
                 title: Text(module.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: IconButton(
                   icon: const Icon(Icons.edit, color: Colors.grey),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditModuleScreen(moduleData: module)));
+                  onPressed: () async {
+                    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditModuleScreen(moduleData: module)));
+                    if(result == true){
+                      _loadModules();
+                    }
                   },
                 ),
               ),
@@ -79,10 +82,12 @@ class _ManageModuleScreen extends ConsumerState<ManageModuleScreen> {
         backgroundColor: const Color(0xFF1E3A8A),
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
-        onPressed: () {
-          // Add action hook
-          Navigator.push(context, MaterialPageRoute(builder: (context) => newModuleScreen(courseId: widget.courseId, courseName: widget.courseName,)));
-         },
+        onPressed: () async {
+          final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => newModuleScreen(courseId: widget.courseId, courseName: widget.courseName,)));
+          if(result == true){
+            _loadModules();
+          }
+          },
       ),
     );
   }

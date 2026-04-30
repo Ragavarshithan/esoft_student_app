@@ -78,9 +78,12 @@ class _ManagebatchScreen extends ConsumerState<ManagebatchScreen> {
         backgroundColor: const Color(0xFF1E3A8A),
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddBatchScreen(courseId: widget.courseId, courseName: widget.courseName)));
-        },
+        onPressed: () async {
+          final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddBatchScreen(courseId: widget.courseId, courseName: widget.courseName)));
+          if(result == true){
+            _loadBatches();
+          }
+          },
       ),
     );
   }

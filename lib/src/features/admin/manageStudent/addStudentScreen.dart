@@ -249,7 +249,6 @@ class _AddStudentScreenState extends State<AddStudentScreen>
             ),
           );
 
-          // Pop screen and return true to indicate success
           Navigator.pop(context, true);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

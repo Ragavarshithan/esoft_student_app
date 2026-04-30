@@ -128,7 +128,7 @@ class _ViewEditCourseScreenState extends State<ViewEditCourseScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Course updated successfully!'), backgroundColor: Colors.green),
                   );
-                  Navigator.pop(context, true); // Return true to refresh list
+                  Navigator.pop(context, true);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Failed to update course.'), backgroundColor: Colors.red),

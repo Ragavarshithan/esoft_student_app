@@ -179,8 +179,7 @@ class _newCourseScreenState extends State<newCourseScreen> {
           _descriptionController.clear();
           _moduleController.clear();
           _courseDurationController.clear();
-          
-          // Pop screen and return true to indicate success
+
           Navigator.pop(context, true);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

@@ -125,7 +125,7 @@ class _ViewEditAssignmentScreenState extends State<ViewEditAssignmentScreen> {
                     assignmentId, name, description, _parseDate(dueDate), moduleId);
 
                 if (await success) {
-                  Navigator.pop(context);
+                  Navigator.pop(context,true);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Assignment updated successfully!'),
@@ -149,7 +149,7 @@ class _ViewEditAssignmentScreenState extends State<ViewEditAssignmentScreen> {
               onTap: () async {
                 final success = _lmsService.deleteAssignment(widget.assignmentId);
                 if (await success) {
-                  Navigator.pop(context);
+                  Navigator.pop(context,true);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Assignment deleted successfully!'),
