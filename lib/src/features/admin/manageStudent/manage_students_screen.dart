@@ -64,7 +64,7 @@ class _ManageStudentsScreenState extends ConsumerState<ManageStudentsScreen> {
                         icon: const Icon(Icons.edit, color: Colors.grey),
                         onPressed: () {
                           // Edit generic action
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditStudentScreen(course: widget.courseName, batch: widget.batch, studentName: student.name, studentEmail: student.email,batchId: student.batchId,studentId: student.id,)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEditStudentScreen(course: widget.courseName, batch: widget.batch, studentName: student.name, studentEmail: student.email,batchId: student.batchId,studentId: student.id,userId: student.studentId,)));
                         },
                       ),
                     ),
@@ -78,7 +78,7 @@ class _ManageStudentsScreenState extends ConsumerState<ManageStudentsScreen> {
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
         onPressed: () {
-         Navigator.push(context, MaterialPageRoute(builder: (context) => AddStudentScreen(course: widget.courseName, batch: widget.batch,batchId: '')));
+         Navigator.push(context, MaterialPageRoute(builder: (context) => AddStudentScreen(course: widget.courseName, batch: widget.batch,batchId: widget.batchId)));
         },
       ),
     );

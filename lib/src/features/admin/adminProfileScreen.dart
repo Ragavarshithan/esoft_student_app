@@ -1,5 +1,6 @@
 import 'package:esoft_student_app/src/features/auth/authService.dart';
 import 'package:esoft_student_app/src/models/auth_response.dart';
+import 'package:esoft_student_app/src/utils/commonWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,7 +44,7 @@ class AdminProfileScreen extends ConsumerStatefulWidget {
         actions: [
           IconButton(
               icon: const Icon(Icons.logout),
-              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  Landingscreen()))
+              onPressed: () => showLogoutDialog(context)
           ),
         ],
       ),

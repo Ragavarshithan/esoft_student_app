@@ -2,6 +2,7 @@ import 'package:esoft_student_app/src/features/auth/landingScreen.dart';
 import 'package:esoft_student_app/src/features/student/assignment/myAssignmentsScreen.dart';
 import 'package:esoft_student_app/src/features/student/attendance/myAttendanceScreen.dart';
 import 'package:esoft_student_app/src/features/student/marks/my_marks_screen.dart';
+import 'package:esoft_student_app/src/utils/commonWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -23,7 +24,7 @@ class StudentDashboard extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  Landingscreen()))
+            onPressed: () => showLogoutDialog(context)
           ),
         ],
       ),

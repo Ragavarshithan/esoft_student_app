@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:esoft_student_app/src/features/admin/attendance/newAttendance.dart';
 import 'package:esoft_student_app/src/features/admin/manageStudent/viewEditStudentScreen.dart';
 import 'package:esoft_student_app/src/features/admin/marks/newMarksScreen.dart';
@@ -17,10 +19,16 @@ class ManageMarksScreen extends ConsumerStatefulWidget {
 }
 
 class _ManageMarksScreenState extends ConsumerState<ManageMarksScreen> {
+
+  final Random random = Random();
+  late List<int> _randomMarks;
   @override
   Widget build(BuildContext context) {
     final mockService = ref.watch(mockDataServiceProvider);
     final students = mockService.users.whereType<Student>().toList();
+    final myMarks = mockService.marks;
+    _randomMarks = List.generate(students.length, (_) => random.nextInt(61) + 30);
+
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +52,7 @@ class _ManageMarksScreenState extends ConsumerState<ManageMarksScreen> {
                       ),
                       title: Text(student.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Text(student.email),
-                      trailing: Text('50/100',
+                      trailing: Text('${_randomMarks[index]}%',
                         style: TextStyle(color: Color(0xFF1E3A8A),
                             fontSize: 16
                         ),

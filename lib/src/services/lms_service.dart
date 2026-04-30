@@ -440,15 +440,17 @@ class LMSService {
 
   Future<bool> updateStudent({
     required String studentId,
+    required String userId,
     required String name,
     required String email,
     required String batchId
   }) async {
     try {
       final response = await _makeRequest((headers) => http.put(
-        Uri.parse('$_baseUrl/students/$studentId'),
+        Uri.parse('$_baseUrl/students/$userId'),
         headers: headers,
         body: json.encode({
+          "userId":userId,
           "name": name,
           "email": email,
           "batchId": batchId

@@ -81,7 +81,7 @@ class _ManageModuleScreen extends ConsumerState<ManageModuleScreen> {
         child: const Icon(Icons.add),
         onPressed: () {
           // Add action hook
-          Navigator.push(context, MaterialPageRoute(builder: (context) => newModuleScreen(courseId: '', courseName: '',)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => newModuleScreen(courseId: widget.courseId, courseName: widget.courseName,)));
          },
       ),
     );

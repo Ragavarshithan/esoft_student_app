@@ -8,6 +8,7 @@ import 'package:esoft_student_app/src/features/admin/marks/selectCourseMarksScre
 import 'package:esoft_student_app/src/features/auth/landingScreen.dart';
 import 'package:esoft_student_app/src/features/chat/chat_screen.dart';
 import 'package:esoft_student_app/src/features/student/marks/performancePopup.dart';
+import 'package:esoft_student_app/src/utils/commonWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'manageAssignment/manageAssignmentScreen.dart';
@@ -29,7 +30,7 @@ class AdminDashboard extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  Landingscreen()))
+            onPressed: () => showLogoutDialog(context)
           ),
         ],
       ),

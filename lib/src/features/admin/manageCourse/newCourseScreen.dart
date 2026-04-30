@@ -76,13 +76,6 @@ class _newCourseScreenState extends State<newCourseScreen> {
                 textinputtype: TextInputType.number
             ),
 
-            /// Module
-            _buildLabel("Module"),
-            _buildInput(
-                hint: "",
-                controller: _moduleController
-            ),
-
 
             _buildLabel("Course Description"),
             _buildInput(
@@ -138,37 +131,7 @@ class _newCourseScreenState extends State<newCourseScreen> {
   }
 
 
-  /// DATE FIELD
-  Widget _buildDateField(BuildContext context, TextEditingController dateController) {
-    return TextField(
-      readOnly: true,
-      controller: dateController,
-      decoration: InputDecoration(
-        hintText: "Select Date",
-        prefixIcon: const Icon(Icons.calendar_today, size: 18),
-        filled: true,
-        fillColor: Colors.grey[200],
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide.none,
-        ),
-      ),
-      onTap: () async {
-        DateTime? pickedDate = await showDatePicker(
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime(2000),
-          lastDate: DateTime(2100),
-        );
 
-        if (pickedDate != null) {
-          dateController.text =
-          "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
-        }
-      },
-    );
-  }
 
 
   Widget _buildPrimaryButton({

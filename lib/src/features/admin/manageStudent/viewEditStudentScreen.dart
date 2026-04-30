@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 
 class ViewEditStudentScreen extends StatefulWidget {
   final String studentId;
+  final String userId;
   final String studentName;
   final String studentEmail;
   final String course;
   final String batch;
   final String batchId;
-  const ViewEditStudentScreen({super.key,required this.course, required this.batch, required this.studentName, required this.studentEmail, required this.studentId, required this.batchId});
+  const ViewEditStudentScreen({super.key,required this.course, required this.batch, required this.studentName, required this.studentEmail, required this.studentId, required this.batchId, required this.userId});
 
   @override
   State<ViewEditStudentScreen> createState() => _ViewEditStudentScreenState();
@@ -20,7 +21,6 @@ class _ViewEditStudentScreenState extends State<ViewEditStudentScreen>
   final _studentNameController = TextEditingController();
   final _studentEmailController = TextEditingController();
   final _courseController = TextEditingController();
-  final _emailController = TextEditingController();
   final _batchController = TextEditingController();
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
@@ -51,7 +51,6 @@ class _ViewEditStudentScreenState extends State<ViewEditStudentScreen>
     _studentNameController.dispose();
     _studentEmailController.dispose();
     _courseController.dispose();
-    _emailController.dispose();
     _batchController.dispose();
     super.dispose();
   }
@@ -130,7 +129,37 @@ class _ViewEditStudentScreenState extends State<ViewEditStudentScreen>
                     _buildPrimaryButton(
                       label: 'UPDATE STUDENT',
                       onTap: () async{
+                        final fullName = _studentNameController.text.trim();
+                        final studentId = widget.studentId;
+                        final email = _studentEmailController.text.trim();
+                        final batchId = widget.batchId;
+                        final userId = widget.userId;
+
+                        debugPrint('fullName: $fullName');
+                        debugPrint('studentId: $studentId');
+                        debugPrint('email: $email');
+                        debugPrint('batchId: $batchId');
+                        // Basic validation
+                        if (fullName.isEmpty ||
+                            studentId.isEmpty ||
+                            email.isEmpty ||
+                            batchId.isEmpty ||
+                            userId.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please fill in all fields'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
+
+                        // Show loading
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Updating student profile...')),
+                        );
                         final success = _lmsService.updateStudent(
+                            userId: widget.userId,
                             studentId: widget.studentId,
                             name: _studentNameController.text,
                             email: _studentEmailController.text,
@@ -147,7 +176,7 @@ class _ViewEditStudentScreenState extends State<ViewEditStudentScreen>
                         } else{
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text('Failed to student lecturer. Please try again.'),
+                              content: Text('Failed to update student. Please try again.'),
                               backgroundColor: Colors.red,
                             ),
                           );
@@ -240,35 +269,7 @@ class _ViewEditStudentScreenState extends State<ViewEditStudentScreen>
     Color color =  const Color(0xFF1A1A2E),
   }) {
     return GestureDetector(
-      onTap: () async {
-        final fullName = _studentNameController.text.trim();
-        final course = _courseController.text.trim();
-        final email = _emailController.text.trim();
-        final batch = _batchController.text;
-
-        // Basic validation
-        if (fullName.isEmpty ||
-            course.isEmpty ||
-            email.isEmpty ||
-            batch.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Please fill in all fields'),
-              backgroundColor: Colors.red,
-            ),
-          );
-          return;
-        }
-
-        // Show loading
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Creating student profile...')),
-        );
-
-
-
-
-      },
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         height: 52,

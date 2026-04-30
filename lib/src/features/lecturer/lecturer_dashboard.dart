@@ -5,6 +5,7 @@ import 'package:esoft_student_app/src/features/lecturer/modules/selectLecturerCo
 import 'package:esoft_student_app/src/features/lecturer/myStudentsMarks/selectLecturerStudentCourseScreen.dart';
 import 'package:esoft_student_app/src/features/lecturer/students/myStudentsScreen.dart';
 import 'package:esoft_student_app/src/features/lecturer/students/selectLecturerStudentCourseScreen.dart';
+import 'package:esoft_student_app/src/utils/commonWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -25,7 +26,7 @@ class LecturerDashboard extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  Landingscreen()))
+            onPressed: () => showLogoutDialog(context)
           ),
         ],
       ),

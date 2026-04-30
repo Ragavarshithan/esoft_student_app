@@ -166,7 +166,7 @@ class MockDataService {
     // Marks for Assignment 1 (c1 - Software Engineering)
     const Mark(id: 'm1', studentId: 's1', moduleId: 'm1', assignmentId: 'a1', score: 85, feedback: 'Good UML diagrams, well structured'),
     const Mark(id: 'm2', studentId: 's2', moduleId: 'm1', assignmentId: 'a1', score: 78, feedback: 'Missing some relationships'),
-    const Mark(id: 'm3', studentId: 's3', moduleId: 'm1', assignmentId: 'a1', score: 92, feedback: 'Excellent work!'),
+    const Mark(id: 'm3', studentId: 's3', moduleId: 'm1', assignmentId: 'a1', score: 42, feedback: 'Excellent work!'),
     const Mark(id: 'm4', studentId: 's11', moduleId: 'm1', assignmentId: 'a1', score: 88, feedback: 'Very detailed diagrams'),
     const Mark(id: 'm5', studentId: 's14', moduleId: 'm1', assignmentId: 'a1', score: 75, feedback: 'Needs improvement in clarity'),
 
@@ -179,7 +179,7 @@ class MockDataService {
 
     // Marks for Assignment 3 (c2 - Database Management)
     const Mark(id: 'm11', studentId: 's1', moduleId: 'm2', assignmentId: 'a3', score: 88, feedback: 'Proper normalization'),
-    const Mark(id: 'm12', studentId: 's2', moduleId: 'm2', assignmentId: 'a3', score: 84, feedback: 'Good schema design'),
+    const Mark(id: 'm12', studentId: 's2', moduleId: 'm2', assignmentId: 'a3', score: 29, feedback: 'Good schema design'),
     const Mark(id: 'm13', studentId: 's6', moduleId: 'm2', assignmentId: 'a3', score: 91, feedback: 'Excellent relationships'),
     const Mark(id: 'm14', studentId: 's10', moduleId: 'm2', assignmentId: 'a3', score: 76, feedback: 'Some redundancy in tables'),
     const Mark(id: 'm15', studentId: 's4', moduleId: 'm2', assignmentId: 'a3', score: 85, feedback: 'Well done'),
@@ -188,8 +188,8 @@ class MockDataService {
 
     // Marks for Assignment 5 (c3 - Mobile Development)
     const Mark(id: 'm21', studentId: 's3', moduleId: 'm3', assignmentId: 'a5', score: 94, feedback: 'Great Flutter implementation'),
-    const Mark(id: 'm22', studentId: 's4', moduleId: 'm3', assignmentId: 'a5', score: 87, feedback: 'Good UI design'),
-    const Mark(id: 'm23', studentId: 's8', moduleId: 'm3', assignmentId: 'a5', score: 91, feedback: 'Firebase integration excellent'),
+    const Mark(id: 'm22', studentId: 's1', moduleId: 'm3', assignmentId: 'a5', score: 45, feedback: 'Good UI design'),
+    const Mark(id: 'm23', studentId: 's1', moduleId: 'm3', assignmentId: 'a5', score: 91, feedback: 'Firebase integration excellent'),
     const Mark(id: 'm24', studentId: 's10', moduleId: 'm3', assignmentId: 'a5', score: 83, feedback: 'Functional but needs UI polish'),
     const Mark(id: 'm25', studentId: 's12', moduleId: 'm3', assignmentId: 'a5', score: 88, feedback: 'Well structured code'),
 
@@ -198,28 +198,27 @@ class MockDataService {
 
 
     // Marks for Assignment 8 (c4 - Web Development)
-    const Mark(id: 'm36', studentId: 's3', moduleId: 'm4', assignmentId: 'a8', score: 93, feedback: 'RESTful API best practices'),
+    const Mark(id: 'm36', studentId: 's3', moduleId: 'm4', assignmentId: 'a8', score: 47, feedback: 'RESTful API best practices'),
     const Mark(id: 'm37', studentId: 's5', moduleId: 'm4', assignmentId: 'a8', score: 87, feedback: 'Good authentication'),
     const Mark(id: 'm38', studentId: 's6', moduleId: 'm4', assignmentId: 'a8', score: 90, feedback: 'Excellent endpoints'),
     const Mark(id: 'm39', studentId: 's13', moduleId: 'm4', assignmentId: 'a8', score: 81, feedback: 'Needs validation'),
-    const Mark(id: 'm40', studentId: 's15', moduleId: 'm4', assignmentId: 'a8', score: 85, feedback: 'Good API design'),
+    const Mark(id: 'm40', studentId: 's15', moduleId: 'm4', assignmentId: 'a8', score: 49, feedback: 'Good API design'),
   ];
 
   final List<Attendance> attendanceRecords = [
     // Week 1 - c1 (Software Engineering)
-    Attendance(id: 'att1', studentId: 's1', moduleId: 'm1', date: DateTime.now().subtract(const Duration(days: 7)), isPresent: true),
-    Attendance(id: 'att2', studentId: 's2', moduleId: 'm1', date: DateTime.now().subtract(const Duration(days: 7)), isPresent: true),
-    Attendance(id: 'att3', studentId: 's3', moduleId: 'm1', date: DateTime.now().subtract(const Duration(days: 7)), isPresent: true),
-    Attendance(id: 'att4', studentId: 's11', moduleId: 'm1', date: DateTime.now().subtract(const Duration(days: 7)), isPresent: false),
-    Attendance(id: 'att5', studentId: 's14', moduleId: 'm1', date: DateTime.now().subtract(const Duration(days: 7)), isPresent: true),
+    Attendance(id: 'att1', studentId: 's1', moduleId: 'm1', date: DateTime(2026, 4, 23), isPresent: true),
+    Attendance(id: 'att2', studentId: 's2', moduleId: 'm1', date: DateTime(2026, 4, 19), isPresent: true),
+    Attendance(id: 'att3', studentId: 's3', moduleId: 'm1', date: DateTime(2026, 4, 12), isPresent: true),
+    Attendance(id: 'att4', studentId: 's11', moduleId: 'm1', date: DateTime(2026, 4, 11), isPresent: false),
+    Attendance(id: 'att5', studentId: 's14', moduleId: 'm1', date: DateTime(2026, 4, 9), isPresent: true),
 
     // Week 1 - c2 (Database Management)
-    Attendance(id: 'att6', studentId: 's1', moduleId: 'm2', date: DateTime.now().subtract(const Duration(days: 7)), isPresent: true),
-    Attendance(id: 'att7', studentId: 's2', moduleId: 'm2', date: DateTime.now().subtract(const Duration(days: 7)), isPresent: true),
-    Attendance(id: 'att8', studentId: 's6', moduleId: 'm2', date: DateTime.now().subtract(const Duration(days: 7)), isPresent: true),
-    Attendance(id: 'att9', studentId: 's10', moduleId: 'm2', date: DateTime.now().subtract(const Duration(days: 7)), isPresent: true),
-    Attendance(id: 'att10', studentId: 's4', moduleId: 'm2', date: DateTime.now().subtract(const Duration(days: 7)), isPresent: false),
-
+    Attendance(id: 'att6', studentId: 's1', moduleId: 'm2', date: DateTime(2026, 4, 7), isPresent: true),
+    Attendance(id: 'att7', studentId: 's2', moduleId: 'm2', date: DateTime(2026, 4, 5), isPresent: true),
+    Attendance(id: 'att8', studentId: 's6', moduleId: 'm2', date: DateTime(2026, 4, 1), isPresent: true),
+    Attendance(id: 'att9', studentId: 's10', moduleId: 'm2', date: DateTime(2026, 3, 27), isPresent: true),
+    Attendance(id: 'att10', studentId: 's4', moduleId: 'm2', date: DateTime(2026, 3, 23), isPresent: false),
   ];
 
 

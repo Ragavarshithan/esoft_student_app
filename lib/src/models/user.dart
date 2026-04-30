@@ -69,7 +69,7 @@ class Student extends AppUser {
     id: json['userId'],
     studentId: json['studentId'],
     name: json['studentName'],
-    email: json['studentName'],
+    email: json['studentEmail'],
     batchId: json['batchId'],
     batchName: json['batchName'],
   );
