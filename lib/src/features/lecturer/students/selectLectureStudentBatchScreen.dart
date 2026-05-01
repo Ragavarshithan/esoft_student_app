@@ -45,13 +45,13 @@ class _SelectLecturerStudentBatchScreen extends ConsumerState<SelectLecturerStud
                 ),
                 title: Text(batch.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: TextButton(
-                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => SelectLecturerStudentModuleScreen(courseId: widget.courseId, courseName: courseName, batchId: batch.id))),
+                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => SelectLecturerStudentModuleScreen(courseId: widget.courseId, courseName: courseName, batchId: batch.id,batchName: batch.name))),
                     child: Text('View Modules', style: const TextStyle(color: Color(0xFF1E3A8A))),
                 ),
               ),
             ),
             onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SelectLecturerStudentModuleScreen(courseId: widget.courseId, courseName: courseName, batchId: batch.id)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SelectLecturerStudentModuleScreen(courseId: widget.courseId, courseName: courseName, batchId: batch.id,batchName: batch.name)));
             },
           );
         },

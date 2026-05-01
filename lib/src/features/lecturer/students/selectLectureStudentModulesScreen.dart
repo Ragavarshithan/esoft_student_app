@@ -17,7 +17,8 @@ class SelectLecturerStudentModuleScreen extends ConsumerStatefulWidget {
   final String batchId;
   final String courseId;
   final String courseName;
-  const SelectLecturerStudentModuleScreen({super.key, required this.courseId, required this.courseName, required this.batchId});
+  final String batchName;
+  const SelectLecturerStudentModuleScreen({super.key, required this.courseId, required this.courseName, required this.batchId, required this.batchName});
 
   @override
   ConsumerState<SelectLecturerStudentModuleScreen> createState() => _SelectLecturerStudentModuleScreen();
@@ -32,7 +33,7 @@ class _SelectLecturerStudentModuleScreen extends ConsumerState<SelectLecturerStu
 
     return Scaffold(
       appBar: AppBar(
-        title:  Text('${widget.batchId}'),
+        title:  Text('${widget.batchName}'),
       ),
       body: modules.isEmpty
           ? const Center(child: Text('No Module found.'))
@@ -52,13 +53,13 @@ class _SelectLecturerStudentModuleScreen extends ConsumerState<SelectLecturerStu
                 ),
                 title: Text(module.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: TextButton(
-                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => MyStudentsScreen())),
+                    onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => MyStudentsScreen(courseName: widget.courseName , batchName: widget.batchName,))),
                     child: const Text('View Students', style: TextStyle(color: Color(0xFF1E3A8A))),
                 ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MyStudentsScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyStudentsScreen(courseName: widget.courseName, batchName: widget.batchName,)));
 
             },
           );

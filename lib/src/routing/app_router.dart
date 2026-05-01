@@ -98,10 +98,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/lecturer',
         builder: (context, state) => const LecturerDashboard(),
       ),
-      GoRoute(
-        path: '/lecturer/students',
-        builder: (context, state) => const MyStudentsScreen(),
-      ),
+      // GoRoute(
+      //   path: '/lecturer/students',
+      //   builder: (context, state) => const MyStudentsScreen(),
+      // ),
       GoRoute(
         path: '/chat',
         builder: (context, state) => const ChatScreen(),

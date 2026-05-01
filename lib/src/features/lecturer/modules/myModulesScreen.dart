@@ -54,7 +54,7 @@ class _MyModuleScreen extends ConsumerState<MyModuleScreen> {
                 trailing: TextButton(
                   child: const Text('View Details', style: TextStyle(color: Color(0xFF1E3A8A))),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewLecturerModuleScreen(courseName: '', moduleData: module)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewLecturerModuleScreen(courseName: widget.courseName, moduleData: module)));
                   },
                 ),
               ),

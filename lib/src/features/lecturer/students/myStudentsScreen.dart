@@ -7,7 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../services/mock_data_service.dart';
 
 class MyStudentsScreen extends ConsumerStatefulWidget {
-  const MyStudentsScreen({super.key});
+  final String courseName;
+  final String batchName;
+  const MyStudentsScreen({super.key, required this.courseName, required this.batchName});
 
   @override
   ConsumerState<MyStudentsScreen> createState() => _MyStudentsScreen();
@@ -54,13 +56,13 @@ class _MyStudentsScreen extends ConsumerState<MyStudentsScreen> {
                 title: Text(myStudent.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: TextButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMyStudentScreen(course: '', batch: '', studentName: myStudent.name, studentEmail: '',)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMyStudentScreen(course: widget.courseName, batch: widget.batchName, studentName: myStudent.name, studentEmail: myStudent.email,)));
                    }, child: Text('Click to view Details'),
                 ),
               ),
             ),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMyStudentScreen(course: '', batch: '', studentName: myStudent.name, studentEmail: '',)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMyStudentScreen(course: widget.courseName, batch: widget.batchName, studentName: myStudent.name, studentEmail: myStudent.email,)));
             },
           );
         },
