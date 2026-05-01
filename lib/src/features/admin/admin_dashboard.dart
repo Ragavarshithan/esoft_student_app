@@ -11,6 +11,8 @@ import 'package:esoft_student_app/src/features/student/marks/performancePopup.da
 import 'package:esoft_student_app/src/utils/commonWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fl_chart/fl_chart.dart';
+import '../../services/mock_data_service.dart';
 import 'manageAssignment/manageAssignmentScreen.dart';
 import 'manageCourse/manageCourseScreen.dart';
 import 'manageStudent/selectCourseScreen.dart';
@@ -24,7 +26,7 @@ class AdminDashboard extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
         leading: IconButton(
-          icon: Icon(Icons.school),
+          icon: const Icon(Icons.school),
           onPressed: () {},
         ),
         actions: [
@@ -40,22 +42,15 @@ class AdminDashboard extends ConsumerWidget {
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
         children: [
-          _DashboardCard(title: 'Students', icon: Icons.people, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  Selectcoursescreen()))),
-          _DashboardCard(title: 'Lecturers', icon: Icons.person_outline, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ManageLecturerScreen()))),
-          _DashboardCard(title: 'Batches', icon: Icons.group_work, onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) =>  BatchManageCourseScreen()))),
-          _DashboardCard(title: 'Courses', icon: Icons.book, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ManageCourseScreen()))),
-          _DashboardCard(title: 'Modules', icon: Icons.newspaper, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ModuleManageCourseScreen()))),
-          _DashboardCard(title: 'Assignments', icon: Icons.assignment, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  AssignmentManageCourseScreen()))),
-          _DashboardCard(title: 'Attendance', icon: Icons.check_box_outlined, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  SelectcourseAttendanceScreen()))),
-          _DashboardCard(title: 'Marks', icon: Icons.percent, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  SelectcourseMarksScreen()))),
+          _DashboardCard(title: 'Students', icon: Icons.people, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Selectcoursescreen()))),
+          _DashboardCard(title: 'Lecturers', icon: Icons.person_outline, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const ManageLecturerScreen()))),
+          _DashboardCard(title: 'Batches', icon: Icons.group_work, onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) =>  const BatchManageCourseScreen()))),
+          _DashboardCard(title: 'Courses', icon: Icons.book, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const ManageCourseScreen()))),
+          _DashboardCard(title: 'Modules', icon: Icons.newspaper, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const ModuleManageCourseScreen()))),
+          _DashboardCard(title: 'Assignments', icon: Icons.assignment, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const AssignmentManageCourseScreen()))),
+          _DashboardCard(title: 'Attendance', icon: Icons.check_box_outlined, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const SelectcourseAttendanceScreen()))),
+          _DashboardCard(title: 'Marks', icon: Icons.percent, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const SelectcourseMarksScreen()))),
           _DashboardCard(title: 'Messages', icon: Icons.message, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const ChatScreen()))),
-          // ElevatedButton(
-          //     onPressed: () => showDialog(
-          //       context: context,
-          //       builder: (context) => performanceDialog(context,true),
-          //     ),
-          //     child: Text("data")
-          // )
         ],
       ),
     );

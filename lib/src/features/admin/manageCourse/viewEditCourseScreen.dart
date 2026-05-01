@@ -82,12 +82,12 @@ class _ViewEditCourseScreenState extends State<ViewEditCourseScreen> {
                 textinputtype: TextInputType.number
             ),
 
-            /// Module
-            _buildLabel("Module"),
-            _buildInput(
-                hint: "",
-                controller: _moduleController
-            ),
+            // /// Module
+            // _buildLabel("Module"),
+            // _buildInput(
+            //     hint: "",
+            //     controller: _moduleController
+            // ),
 
 
             _buildLabel("Course Description"),

@@ -119,7 +119,37 @@ class _ManageAttendanceScreenState extends ConsumerState<ManageAttendanceScreen>
                         ],
                       ),
                     ),
-                    const Icon(Icons.analytics_outlined, color: Colors.white24, size: 60),
+                    SizedBox(
+                      height: 80,
+                      width: 80,
+                      child: PieChart(
+                        PieChartData(
+                          sectionsSpace: 2,
+                          centerSpaceRadius: 20,
+                          sections: [
+                            PieChartSectionData(
+                              value: totalPresent.toDouble(),
+                              color: Colors.greenAccent,
+                              title: '',
+                              radius: 10,
+                            ),
+                            PieChartSectionData(
+                              value: totalAbsent.toDouble(),
+                              color: Colors.redAccent.withOpacity(0.8),
+                              title: '',
+                              radius: 10,
+                            ),
+                            if (_attendanceList.isEmpty)
+                              PieChartSectionData(
+                                value: 1,
+                                color: Colors.white24,
+                                title: '',
+                                radius: 10,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               );

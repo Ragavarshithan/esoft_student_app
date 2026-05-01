@@ -7,6 +7,7 @@ import 'package:esoft_student_app/src/utils/commonWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:fl_chart/fl_chart.dart';
 import '../../services/mock_data_service.dart';
 import '../chat/chat_screen.dart';
 
@@ -19,7 +20,7 @@ class StudentDashboard extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Student Portal'),
         leading: IconButton(
-          icon: Icon(Icons.school),
+          icon: const Icon(Icons.school),
           onPressed: () {},
         ),
         actions: [
@@ -35,11 +36,11 @@ class StudentDashboard extends ConsumerWidget {
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
         children: [
-          _DashboardCard(title: 'My Marks', icon: Icons.grade, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyMarksScreen()))),
-          _DashboardCard(title: 'Attendance', icon: Icons.calendar_month, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyAttendanceScreen()))),
+          _DashboardCard(title: 'My Marks', icon: Icons.grade, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const MyMarksScreen()))),
+          _DashboardCard(title: 'Attendance', icon: Icons.calendar_month, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const MyAttendanceScreen()))),
           _DashboardCard(title: 'Assignments', icon: Icons.assignment, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyAssignmentsScreen()))),
           // _DashboardCard(title: 'Enrollment', icon: Icons.how_to_reg, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const MyEnrollmentScreen()))),
-          _DashboardCard(title: 'Messages', icon: Icons.message, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ChatScreen()))),
+          _DashboardCard(title: 'Messages', icon: Icons.message, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const ChatScreen()))),
         ],
       ),
     );
